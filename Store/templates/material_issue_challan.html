@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Material Issue Receipt</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      margin: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .pdf-container {
+      width: 800px;
+      border: 1px solid #000;
+      padding: 25px 35px;
+      position: relative;
+      min-height: 1050px; /* ensures footer sticks at bottom */
+    }
+
+    h4 {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+
+    .sub-header {
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    h6 {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .info-section {
+      font-size: 13px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .info-left {
+      width: 70%;
+    }
+
+    .info-right {
+      text-align: right;
+      width: 30%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+
+    th, td {
+      border: 1px solid #000;
+      padding: 5px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    th {
+      font-weight: bold;
+      background-color: #f9f9f9;
+    }
+
+    /* Footer Section */
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      left: 35px;
+      right: 35px;
+      border-top: 1px solid #000;
+      display: flex;
+      justify-content: space-between;
+      padding-top: 8px;
+      font-size: 13px;
+    }
+
+    .footer span {
+      display: inline-block;
+      min-width: 100px;
+    }
+
+    @media print {
+      body {
+        margin: 0;
+      }
+      .pdf-container {
+        border: none;
+        width: 100%;
+        padding: 0 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="pdf-container">
+    <!-- Header -->
+    <h4>AYUSH ENTRPRISES</h4>
+    <div class="sub-header">MIDC WALUJ AURANGABAD 431136</div>
+    <h6>MATERIAL ISSUE RECEIPT</h6>
+
+    <!-- Info Rows -->
+    <div class="info-section">
+      <div class="info-left">
+        <b>ISO Format No :</b>
+      </div>
+      <div class="info-right">
+        <b>Page No :</b> 1 of 1
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-left">
+        <b>Issue No :</b>{{ challan.ChallanNo }} &nbsp;&nbsp;
+        <b>Date :</b>{{ challan.MaterialIssueDate }}&nbsp;&nbsp;
+        <b>Issue Time :</b>{{ challan.MaterialIssueTime }} 
+      </div>
+      <div class="info-right">
+        <b>WO. No :</b>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-left">
+        <b>Project Name :</b>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <table>
+      <thead>
+        <tr>
+          <th>Sr</th>
+          <th>MRN No</th>
+          <th>Particular</th>
+          <th>Heat Code</th>
+          <th>Qty</th>
+          <th>Remark</th>
+          <th>Machine</th>
+          <th>Dept Name</th>
+          <th>Emp Name</th>
+        </tr>
+      </thead>
+      <tbody>
+            {% for item in items %}
+        <tr>
+          <td>1</td>
+          <td>{{ item.MrnNo }}</td>
+          <td>{{ item.ItemDescription }}</td>
+          <td>{{ item.HeatNo }}</td>
+          <td>{{ item.Qty }}</td>
+          <td>{{ challan.Remark}}</td>
+          <td>{{ item.Machine }}</td>
+          <td>{{ item.Dept}}</td>
+          <td>{{ item.Employee}}</td>
+        </tr>
+         {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Footer -->
+    <div class="footer">
+      <span>Production</span>
+      <span>Stores</span>
+      <span>17.06.2018</span>
+    </div>
+  </div>
+</body>
+</html>

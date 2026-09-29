@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Purchase Bill</title>
+
+    <style>
+
+        @page {
+            size: A4 landscape;
+            margin: 10px;
+        }
+
+        body{
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            color:#000;
+        }
+
+        table{
+            width:100%;
+            border-collapse: collapse;
+        }
+
+        th, td{
+            border:1px solid #000;
+            padding:5px;
+            vertical-align: top;
+        }
+
+        .no-border td{
+            border:none;
+        }
+
+        .text-center{
+            text-align:center;
+        }
+
+        .text-right{
+            text-align:right;
+        }
+
+        .heading{
+            font-size:20px;
+            font-weight:bold;
+            text-align:center;
+        }
+
+        .bold{
+            font-weight:bold;
+        }
+
+        .mb-5{
+            margin-bottom:5px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+
+<!-- TOP HEADER -->
+
+<table class="no-border mb-5">
+
+    <tr>
+
+        <td width="33%">
+            Print Date :
+            {% now "d/m/Y H:i:s" %}
+        </td>
+
+        <td width="34%" class="text-center heading">
+            PURCHASE BILL
+        </td>
+
+        <td width="33%" class="text-right">
+            Page No : 1 of 1
+        </td>
+
+    </tr>
+
+</table>
+
+
+
+<!-- COMPANY + BILL DETAILS -->
+
+<table class="mb-5">
+
+    <tr>
+
+        <!-- COMPANY -->
+
+        <td width="54%">
+
+            <div class="bold" style="font-size:14px;">
+                {{ bill.supplier_name }}
+            </div>
+
+            <div style="margin-top:5px;">
+                Plant : {{ bill.plant }} <br>
+                Bill Type : {{ bill.bill_type }} <br>
+                Payment Terms : {{ bill.payment_days_terms }}
+            </div>
+
+        </td>
+
+
+        <!-- BILL DETAILS -->
+
+        <td width="46%">
+
+            <table style="border-collapse: collapse;">
+
+                <tr>
+
+                    <td class="bold" style="border:none; width:30%;">
+                        Bill No :
+                    </td>
+
+                    <td style="border:none;">
+                        {{ bill.no }}
+                    </td>
+
+                    <td class="bold" style="border:none; width:30%;">
+                        Bill Date :
+                    </td>
+
+                    <td style="border:none;">
+                        {{ bill.posting_date }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td class="bold" style="border:none;">
+                        Invoice No :
+                    </td>
+
+                    <td style="border:none;">
+                        {{ bill.challan_no }}
+                    </td>
+
+                    <td class="bold" style="border:none;">
+                        Invoice Date :
+                    </td>
+
+                    <td style="border:none;">
+                        {{ bill.challan_date }}
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </td>
+
+    </tr>
+
+</table>
+
+
+
+<!-- ITEM TABLE -->
+
+<table>
+
+    <thead>
+
+        <tr>
+
+            <th width="3%">Sr.</th>
+            <th width="8%">Grn No</th>
+            <th width="8%">Challan No</th>
+            <th width="8%">PO No</th>
+            <th width="6%">Item No</th>
+            <th width="14%">Item Desc</th>
+            <th width="7%">HSN/SAC Code</th>
+            <th width="5%">Qty</th>
+            <th width="6%">Rate</th>
+            <th width="5%">Disc Amt</th>
+            <th width="8%">Sub Total</th>
+            <th width="6%">CGST Amt</th>
+            <th width="6%">SGST Amt</th>
+            <th width="6%">IGST Amt</th>
+            <th width="10%">GL Name</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for item in items %}
+
+        <tr>
+
+            <td class="text-center">
+                {{ forloop.counter }}
+            </td>
+
+            <td>
+                {{ item.grn_no }}
+            </td>
+
+            <td>
+                {{ item.chall_no }}
+            </td>
+
+            <td>
+                {{ item.po_no }}
+            </td>
+
+            <td>
+                {{ item.item_no }}
+            </td>
+
+            <td>
+                {{ item.item_description }}
+            </td>
+
+            <td>
+                {{ item.hsn_code }}
+            </td>
+
+            <td class="text-right">
+                {{ item.grn_qty }}
+            </td>
+
+            <td class="text-right">
+                {{ item.rate }}
+            </td>
+
+            <td class="text-right">
+                {{ item.discount }}
+            </td>
+
+            <td class="text-right">
+                {{ item.sub_total }}
+            </td>
+
+            <td class="text-right">
+                {{ item.cgst_amt }}
+            </td>
+
+            <td class="text-right">
+                {{ item.sgst_amt }}
+            </td>
+
+            <td class="text-right">
+                {{ item.igst_amt }}
+            </td>
+
+            <td>
+                {{ item.glid }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+
+
+        <!-- TOTAL ROW -->
+
+        <tr>
+
+            <td colspan="10" class="text-center bold">
+                Total
+            </td>
+
+            <td class="text-right bold">
+                {{ sub_total }}
+            </td>
+
+            <td class="text-right bold">
+                {{ total_cgst }}
+            </td>
+
+            <td class="text-right bold">
+                {{ total_sgst }}
+            </td>
+
+            <td class="text-right bold">
+                {{ total_igst }}
+            </td>
+
+            <td></td>
+
+        </tr>
+
+    </tbody>
+
+</table>
+
+
+
+<!-- OTHER CHARGES + GST + TOTAL -->
+
+<br>
+
+<table>
+
+    <tr>
+
+        <!-- OTHER CHARGES -->
+
+        <td width="45%" valign="top">
+
+            <table>
+
+                <tr>
+                    <th colspan="3" class="text-center">
+                        Other Charges
+                    </th>
+                </tr>
+
+                <tr>
+                    <td>Pck. & Fwrd :</td>
+                    <td>{{ bill.fwd_charges|default:"0" }}</td>
+                    <td class="text-right">0</td>
+                </tr>
+
+                <tr>
+                    <td>Transport :</td>
+                    <td>{{ bill.transport_charged|default:"0" }}</td>
+                    <td class="text-right">0</td>
+                </tr>
+
+                <tr>
+                    <td>Insurance :</td>
+                    <td>{{ bill.insurence|default:"0" }}</td>
+                    <td class="text-right">0</td>
+                </tr>
+
+                <tr>
+                    <td>Installment :</td>
+                    <td>{{ bill.installation_charges|default:"0" }}</td>
+                    <td class="text-right">0</td>
+                </tr>
+
+                <tr>
+                    <td>Other Charges :</td>
+                    <td>{{ bill.other_charges|default:"0" }}</td>
+
+                    <td class="text-right">
+                        {{ bill.other_amt|default:"0" }}
+                    </td>
+                </tr>
+
+            </table>
+
+        </td>
+
+
+
+        <!-- GST -->
+
+        <td width="25%" valign="top">
+
+            <table>
+
+                <tr>
+                    <th colspan="2" class="text-center">
+                        GST
+                    </th>
+                </tr>
+
+                <tr>
+                    <td>CGST Total :</td>
+
+                    <td class="text-right">
+                        {{ total_cgst }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>SGST Total :</td>
+
+                    <td class="text-right">
+                        {{ total_sgst }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>IGST Total :</td>
+
+                    <td class="text-right">
+                        {{ total_igst }}
+                    </td>
+                </tr>
+
+                <tr>
+
+                    <!-- <td class="bold">
+                        Total GST :
+                    </td>
+
+                    <td class="text-right bold">
+                        {{ total_gst }}
+                    </td> -->
+
+                </tr>
+
+            </table>
+
+        </td>
+
+
+
+        <!-- TOTAL -->
+
+        <td width="30%" valign="top">
+
+            <table>
+
+                <tr>
+                    <th colspan="2" class="text-center">
+                        Total
+                    </th>
+                </tr>
+
+                <tr>
+
+                    <td>
+                        Sub Total :
+                    </td>
+
+                    <td class="text-right">
+                        {{ sub_total }}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>
+                        Assessable Total :
+                    </td>
+
+                    <td class="text-right">
+                        {{ bill.assable_value|default:sub_total }}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>
+                        GST :
+                    </td>
+
+                    <td class="text-right">
+                        {{ total_gst }}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>
+                        Other Charges :
+                    </td>
+
+                    <td class="text-right">
+                        {{ bill.other_amt|default:"0" }}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>
+                        Total TDS :
+                    </td>
+
+                    <td class="text-right">
+                        {{ bill.tds|default:"0" }}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td class="bold">
+                        Grand Total :
+                    </td>
+
+                    <td class="text-right bold">
+                        {{ grand_total }}
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </td>
+
+    </tr>
+
+</table>
+
+
+
+<!-- SIGNATURE -->
+
+<br><br><br><br>
+
+<table class="no-border">
+
+    <tr>
+
+        <td width="50%" class="text-center">
+
+            <div class="bold">
+                
+            </div>
+
+            <br>
+
+            <div class="bold" style="font-size:14px;">
+                Bill Passing By
+            </div>
+
+        </td>
+
+
+        <td width="50%" class="text-center">
+
+            <div class="bold">
+                
+            </div>
+
+            <br>
+
+            <div class="bold" style="font-size:14px;">
+                Authorised By
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+
+</body>
+</html>

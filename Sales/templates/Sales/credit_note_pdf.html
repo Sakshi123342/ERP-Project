@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <style>
+
+        @page {
+            size: A4;
+            margin: 8px;
+        }
+
+        body{
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            margin:0;
+            padding:0;
+        }
+
+        table{
+            width:100%;
+            border-collapse: collapse;
+        }
+
+        td,th{
+            border:1px solid black;
+            padding:4px;
+            vertical-align: top;
+        }
+
+        .center{
+            text-align:center;
+        }
+
+        .right{
+            text-align:right;
+        }
+
+        .bold{
+            font-weight:bold;
+        }
+
+        .title{
+            font-size:18px;
+            font-weight:bold;
+        }
+
+        .small{
+            font-size:10px;
+        }
+
+        .no-border{
+            border:none !important;
+        }
+
+        /* FULL PAGE HEIGHT */
+
+        .main-container{
+            min-height: 1120px;
+        }
+
+        /* ITEM ROW HEIGHT */
+
+        .item-row{
+            height:420px;
+            vertical-align: top;
+        }
+
+        .signature-box{
+            height:120px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="main-container">
+
+    <!-- HEADER -->
+
+    <table>
+
+        <tr>
+
+            <td colspan="2" class="center title no-border">
+                Credit Note
+                <span style="float:right;font-size:10px;font-weight:normal;">
+                    (ORIGINAL FOR RECIPIENT)
+                </span>
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <!-- COMPANY DETAILS -->
+
+            <td style="width:58%;">
+
+                <b> AYUSH ENTRPRISES</b><br>
+
+               MIDC WALUJ AURANGABAD 431136<br>
+
+                GSTIN : 27AAMFS1149Q1ZH<br>
+
+                State Code : Maharashtra, Code 27<br>
+
+                CIN : --<br>
+
+                Contact : 8888826579<br>
+
+                Email : contact@sharp-engineers.com
+
+            </td>
+
+            <!-- RIGHT SIDE -->
+
+            <td style="width:42%; padding:0;">
+
+                <table>
+
+                    <tr>
+
+                        <td style="width:55%;">
+                            Credit Note No.
+                        </td>
+
+                        <td>
+                            <b>{{ credit_note.credit_note_no }}</b>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Dated</td>
+
+                        <td>
+                            <b>{{ credit_note.credit_note_date|date:"d/m/Y" }}</b>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Our Invoice No.</td>
+
+                        <td>
+                            <b>{{ credit_note.inv_no }}</b>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Invoice Date</td>
+
+                        <td>
+                            <b>{{ credit_note.inv_date|date:"d/m/Y" }}</b>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>GRN No</td>
+
+                        <td>
+                            {% if items %}
+                                <b>{{ items.0.grn_no }}</b>
+                            {% endif %}
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>GRN Date</td>
+
+                        <td>
+                            {% if items %}
+                                <b>{{ items.0.grn_date|date:"d/m/Y" }}</b>
+                            {% endif %}
+                        </td>
+
+                    </tr>
+
+                </table>
+
+            </td>
+
+        </tr>
+
+        <!-- PARTY DETAILS -->
+
+        <tr>
+
+            <td style="height:130px;">
+
+                Party:<br><br>
+
+                <b>{{ credit_note.party_name }}</b><br>
+
+                GSTIN/UIN : {{ credit_note.supp_Crdr_no }}<br>
+
+                State Name : Maharashtra
+
+            </td>
+
+            <td></td>
+
+        </tr>
+
+    </table>
+
+    <!-- IRN -->
+
+    <table>
+
+        <tr>
+
+            <td style="border-top:none;">
+                IRN No :
+            </td>
+
+        </tr>
+
+    </table>
+
+    <!-- ITEM TABLE -->
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th style="width:4%">Sr.</th>
+
+                <th style="width:36%">
+                    Description of Goods
+                </th>
+
+                <th style="width:10%">
+                    HSN/SAC
+                </th>
+
+                <th style="width:8%">
+                    GST Rate
+                </th>
+
+                <th style="width:10%">
+                    Part No
+                </th>
+
+                <th style="width:10%">
+                    Quantity
+                </th>
+
+                <th style="width:8%">
+                    Rate
+                </th>
+
+                <th style="width:6%">
+                    per
+                </th>
+
+                <th style="width:12%">
+                    Amount
+                </th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for item in items %}
+
+            <tr class="item-row">
+
+                <td class="center">
+                    {{ forloop.counter }}
+                </td>
+
+                <td>
+
+                    <b>{{ item.item_description }}</b>
+
+                </td>
+
+                <td class="center">
+
+                    {{ item.hsn_code }}
+
+                </td>
+
+                <td class="center">
+
+                    {{ credit_note.cgst }} %
+
+                </td>
+
+                <td class="center">
+
+                    {{ item.item_no }}
+
+                </td>
+
+                <td class="center">
+
+                    {{ item.quntity }} {{ item.unit }}
+
+                </td>
+
+                <td class="right">
+
+                    {{ item.rate }}
+
+                </td>
+
+                <td class="center">
+
+                    {{ item.unit }}
+
+                </td>
+
+                <td class="right">
+
+                    {{ item.total_amount|floatformat:2 }}
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            <!-- TOTAL -->
+
+            <tr>
+
+                <td></td>
+
+                <td class="right bold">
+
+                    Total
+
+                </td>
+
+                <td></td>
+
+                <td></td>
+
+                <td></td>
+
+                <td class="center bold">
+
+                    {% if items %}
+                        {{ items.0.quntity }} {{ items.0.unit }}
+                    {% endif %}
+
+                </td>
+
+                <td></td>
+
+                <td></td>
+
+                <td class="right bold">
+
+                    {{ grand_item_total|floatformat:2 }}
+
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+    <!-- AMOUNT WORDS -->
+
+    <table>
+
+        <tr>
+
+            <td style="width:80%;">
+
+                Amount Chargeable (in words)<br>
+
+                <b>
+                    Indian Rupees Zero Only
+                </b>
+
+            </td>
+
+            <td class="right">
+                E. & O.E
+            </td>
+
+        </tr>
+
+    </table>
+
+    <!-- GST SUMMARY -->
+
+    <table>
+
+        <tr>
+
+            <th rowspan="2" style="width:25%;">
+                HSN/SAC
+            </th>
+
+            <th rowspan="2" style="width:18%;">
+                Taxable Value
+            </th>
+
+            <th colspan="2" style="width:20%;">
+                Central Tax
+            </th>
+
+            <th colspan="2" style="width:20%;">
+                State Tax
+            </th>
+
+            <th rowspan="2" style="width:17%;">
+                Total Tax Amount
+            </th>
+
+        </tr>
+
+        <tr>
+
+            <th>Rate</th>
+            <th>Amount</th>
+
+            <th>Rate</th>
+            <th>Amount</th>
+
+        </tr>
+
+        <tr>
+
+            <td>
+
+                {% if items %}
+                    <b>{{ items.0.hsn_code }}</b>
+                {% endif %}
+
+            </td>
+
+            <td class="right">
+
+                {{ grand_item_total|floatformat:2 }}
+
+            </td>
+
+            <td class="center">
+
+                {{ credit_note.cgst }}%
+
+            </td>
+
+            <td class="right">
+
+                {{ credit_note.cgst_amt|floatformat:2 }}
+
+            </td>
+
+            <td class="center">
+
+                {{ credit_note.sgst }}%
+
+            </td>
+
+            <td class="right">
+
+                {{ credit_note.sgst_amt|floatformat:2 }}
+
+            </td>
+
+            <td class="right">
+
+                0.00
+
+            </td>
+
+        </tr>
+
+        <!-- TOTAL -->
+
+        <tr>
+
+            <td class="right bold">
+
+                Total
+
+            </td>
+
+            <td class="right bold">
+
+                {{ grand_item_total|floatformat:2 }}
+
+            </td>
+
+            <td></td>
+
+            <td class="right bold">
+
+                {{ credit_note.cgst_amt|floatformat:2 }}
+
+            </td>
+
+            <td></td>
+
+            <td class="right bold">
+
+                {{ credit_note.sgst_amt|floatformat:2 }}
+
+            </td>
+
+            <td class="right bold">
+
+                {{ credit_note.grand_total|floatformat:2 }}
+
+            </td>
+
+        </tr>
+
+    </table>
+
+    <!-- TAX WORDS -->
+
+    <table>
+
+        <tr>
+
+            <td>
+
+                Tax Amount (in words) :
+                <b>Indian Rupees Zero Only</b>
+
+            </td>
+
+        </tr>
+
+    </table>
+
+    <!-- FOOTER -->
+
+    <table>
+
+        <tr>
+
+            <!-- LEFT -->
+
+            <td style="width:70%; border-right:none; height:130px;">
+
+                <br>
+
+                Company's GSTIN : 
+                <b>27AAMFS1149Q1ZH</b>
+
+                <br><br>
+
+                Company's PAN :
+                <b>AAMFS1149Q</b>
+
+                <br><br>
+
+                Party's GSTIN :
+                <b>{{ credit_note.supp_Crdr_no }}</b>
+
+                <br><br>
+
+                Party's PAN No :
+                <b>{{ credit_note.supp_Crdr_no }}</b>
+
+            </td>
+
+            <!-- RIGHT -->
+
+            <td class="signature-box"
+                style="width:30%; border-left:none;">
+
+                <div style="text-align:right;">
+
+                    <br><br><br>
+
+                    <b>For AYUSH ENTRPRISES</b>
+
+                    <br><br><br><br><br>
+
+                    Authorised Signatory
+
+                </div>
+
+            </td>
+
+        </tr>
+
+    </table>
+
+    <!-- FOOT NOTE -->
+
+    <br>
+
+    <div class="center">
+
+        This is Computer Generated Document
+
+    </div>
+
+</div>
+
+</body>
+</html>

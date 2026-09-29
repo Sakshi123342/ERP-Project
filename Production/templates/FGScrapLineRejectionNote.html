@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>FG Scrap Details</title>
+</head>
+<body>
+    <h1>Scrap Note: {{ scrap_detail.NoteNo }}</h1>
+    <p><strong>Plant:</strong> {{ scrap_detail.Plant }}</p>
+    <p><strong>Note Date:</strong> {{ scrap_detail.NoteDate }}</p>
+    <p><strong>Item Code:</strong> {{ scrap_detail.ItemCode }}</p>
+    <p><strong>Scrap Reason:</strong> {{ scrap_detail.ScrapReason }}</p>
+
+    <h2>Scrap Items</h2>
+    <table border="1">
+        <tr>
+            <th>Heat Code</th>
+            <th>Item Description</th>
+            <th>Rework Qty</th>
+            <th>Reject Qty</th>
+            <th>Scrap Wt</th>
+        </tr>
+        {% for item in scrap_items %}
+        <tr>
+            <td>{{ item.HeatCode }}</td>
+            <td>{{ item.ItemDescription }}</td>
+            <td>{{ item.ReworkQty }}</td>
+            <td>{{ item.RejectQty }}</td>
+            <td>{{ item.ScrapWt }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

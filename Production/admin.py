@@ -1,0 +1,25 @@
+from django.contrib import admin
+from .models import *
+
+# Register your models here.
+admin.site.register(ScrapRejection)
+admin.site.register(MachineIdleTime)
+admin.site.register(MachineIdleTime2)
+admin.site.register(ProductionEntry)
+admin.site.register(AssemblyProductionDetails)
+admin.site.register(ProductionEntry2)
+admin.site.register(ProductDetail2)
+admin.site.register(Item2)
+admin.site.register(ConsumptionDetails)
+admin.site.register(MachineIdleTimeAss)
+admin.site.register(ItemStockDetails)
+admin.site.register(ReworkReason)
+admin.site.register(RejectReason)
+admin.site.register(ReworkReason2)
+admin.site.register(ProductionRecord)
+admin.site.register(FGScrapDetails)
+admin.site.register(FGScrapItem)
+admin.site.register(ScrapLineRejectionNote)
+admin.site.register(ScrapLineRejectionNoteDetails)
+admin.site.register(WorkOrderEntry)
+admin.site.register(NewWorkOrderItem)

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Scrap Line Rejection Note</title>
+</head>
+<body>
+    <h1>Scrap Rejection Note: {{ rejection_note.ScrapRejectionNo }}</h1>
+    <p><strong>Plant:</strong> {{ rejection_note.Plant }}</p>
+    <p><strong>Date:</strong> {{ rejection_note.ScrapRejectionNoteDate }}</p>
+    <p><strong>Item No:</strong> {{ rejection_note.ItemNo }}</p>
+    <p><strong>Customer/Supplier:</strong> {{ rejection_note.cust_SuppName }}</p>
+    <p><strong>Scrap Qty:</strong> {{ rejection_note.ScrapQty }}</p>
+    <p><strong>Reason:</strong> {{ rejection_note.RejectReason }}</p>
+
+    <h2>Rejection Items</h2>
+    <table border="1">
+        <thead>z
+            <tr>
+                <th>Item No</th>
+                <th>Scrap Rejection Qty</th>
+                <th>Reason Note</th>
+                <th>Reject Reason</th>
+                <th>Scrap Item</th>
+                <th>Scrap Qty</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in rejection_items %}
+            <tr>
+                <td>{{ item.ItemNo }}</td>
+                <td>{{ item.ScrapRejectionQty }}</td>
+                <td>{{ item.ReasonNote }}</td>
+                <td>{{ item.RejectReason }}</td>
+                <td>{{ item.ScrapRejectionItem }}</td>
+                <td>{{ item.ScrapQty }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

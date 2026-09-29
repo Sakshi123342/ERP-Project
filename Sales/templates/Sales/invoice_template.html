@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial; font-size: 11px; }
+        table { width: 100%; border-collapse: collapse; }
+        td, th { border: 1px solid black; padding: 4px; }
+        .no-border td { border: none; }
+        .center { text-align: center; }
+        .right { text-align: right; }
+        .bold { font-weight: bold; }
+        .small { font-size: 10px; }
+    </style>
+</head>
+
+<body>
+<!-- 
+<table class="no-border">
+    <tr>
+        <td class="left bold">SSI UNIT</td>
+        <td class="center bold  "  ><h2>TAX INVOICE</h2></td>
+        <td class="right bold">ORIGINAL FOR RECIPIENT</td>
+    </tr>
+</table> -->
+<table class="no-border" style="width:100%;">
+    <tr>
+        <td class="bold" style="width:33.33%; text-align:left;">
+            SSI UNIT
+        </td>
+
+        <td class="bold" style="width:33.33%; text-align:center;">
+            <h1 style="margin:0;">TAX INVOICE</h1>
+        </td>
+
+        <td class="bold" style="width:33.33%; text-align:right;">
+            ORIGINAL FOR RECIPIENT
+        </td>
+    </tr>
+</table>
+
+<p class="center small">(Under Section 31 of GST Act, 2017 read with Rule 48 of GST Rule, 2017)</p>
+
+<table>
+    <tr>
+        <td width="50%">
+            <b>Supplier Details:</b><br>
+            <b>AYUSH ENTRPRISES</b><br>
+            MIDC WALUJ AURANGABAD 431136<br>
+            PH NO: 8888826579<br><br>
+
+            State: MAHARASHTRA<br>
+            State Code: 27<br><br>
+
+            GSTIN: 27AAMFS1149Q1ZH<br>
+            PAN No: AAMFS1149Q<br>
+            Reverse Charge: No
+        </td>
+
+        <td width="50%">
+            <table class="no-border">
+                <tr>
+                    <td class="center">
+                        {% if qr_code %}
+                        <img src="{{ qr_code }}" width="120">
+                        {% endif %}
+                    </td>
+                    <td>
+                        Invoice No : {{ invoice.invoice_no }}<br>
+                        Invoice Date : {{ invoice.invoice_Date }}<br>
+                        Time of Prepar.: {{ invoice.invoice_time|default:"" }}<br>
+
+                        P.O. No : {{ first_item.po_no|default:"" }}<br>
+                        P.O Date : {{ first_item.date|default:"" }}<br><br>
+
+                        EWay Bill No : {{ invoice.Eway_bill_no|default:"" }}<br>
+                        EWay Bill Date : {{ invoice.Eway_bill_Date|default:"" }}<br>
+                        Carrier Name : {{ invoice.transporter|default:"" }}<br>
+                        Vehicle No : {{ invoice.vehical_no|default:"" }}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <td>
+            <b>Details of Receiver (Billed To)</b><br>
+            {{ invoice.bill_to|default:"" }}<br>
+            GSTIN:
+        </td>
+        <td>
+            <b>Details of Consignee (Shipped To)</b><br>
+            {{ invoice.ship_to|default:"" }}<br>
+            GSTIN:
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th>Sr No</th>
+        <th>Description</th>
+        <th>HSN</th>
+        <th>No of Pkgs</th>
+        <th>UOM</th>
+        <th>Qty</th>
+        <th>Rate</th>
+        <th>Amount</th>
+    </tr>
+
+    {% for item in items %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td style="text-align:left">{{ item.description }}</td>
+        <td>{{ item.hsn_code }}</td>
+        <td>{{ item.pkg_qty|default:"" }}</td>
+        <td>NOS</td>
+        <td>{{ item.inv_qty|default:item.po_qty|default:"0" }}</td>
+        <td>{{ item.rate|default:"0" }}</td>
+        <td>{{ item.amount }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<table>
+    <tr>
+        <td width="60%">
+            Dt & Time of Issue: {{ invoice.invoice_Date }} {{ invoice.invoice_time|default:"" }}<br>
+            Dt & Time of Removal: {{ invoice.date_of_removal }} {{ invoice.time|default:"" }}<br><br>
+
+            Taxable Value in words:
+        </td>
+
+        <td width="40%">
+            <table>
+                <tr><td>Total Value</td><td>{{ total }}</td></tr>
+                <tr><td>Discount</td><td>{{ gst.disc_amt|default:"0.00" }}</td></tr>
+                <tr><td>Taxable Value</td><td>{{ gst.assessble_value|default:"0.00" }}</td></tr>
+                <tr><td>CGST</td><td>{{ gst.cgst_amt|default:"0.00" }}</td></tr>
+                <tr><td>SGST</td><td>{{ gst.sgst_amt|default:"0.00" }}</td></tr>
+                <tr><td>IGST</td><td>{{ gst.igst_amt|default:"0.00" }}</td></tr>
+                <tr><td><b>Total Invoice Value</b></td><td><b>{{ grand_total|default:total }}</b></td></tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<br>
+
+<p class="small">
+This invoice is due for payment on 23/03/2026...
+</p>
+
+<br><br>
+
+<table class="no-border">
+    <tr>
+        <td></td>
+        <td class="right">
+            For AYUSH ENTRPRISES<br><br><br>
+            Authorised Signatory
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

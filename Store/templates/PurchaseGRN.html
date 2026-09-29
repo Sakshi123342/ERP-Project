@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goods Received Note</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #000;
+            padding: 15px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .header p {
+            margin: 5px 0;
+            font-size: 12px;
+        }
+        .title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 10px 0;
+            text-decoration: underline;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        .info-item {
+            display: flex;
+        }
+        .info-label {
+            font-weight: bold;
+            min-width: 100px;
+        }
+        .info-value {
+            flex: 1;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 5px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .remarks {
+            margin-bottom: 15px;
+        }
+        .remarks-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .remarks-content {
+            border: 1px solid #000;
+            padding: 10px;
+            min-height: 40px;
+        }
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .signature {
+            text-align: center;
+            width: 30%;
+        }
+        .signature-line {
+            border-top: 1px solid #000;
+            margin-top: 30px;
+            padding-top: 5px;
+        }
+        @media print {
+            body {
+                padding: 0;
+            }
+            .container {
+                border: none;
+            }
+            @page {
+                size: A4;
+                margin: 10mm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AYUSH ENTRPRISES</h1>
+            <p>MIDC WALUJ AURANGABAD 431136</p>
+        </div>
+        
+        <div class="title">GOODS RECEIVED NOTE</div>
+        
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">GRN No:</div>
+                <div class="info-value">{{ grn_detail.GrnNo }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">GRN Date:</div>
+                <div class="info-value">{{ grn_detail.GrnDate }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Supplier Name:</div>
+                <div class="info-value">{{ grn_detail.SelectSupplier }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">GIN No:</div>
+                <div class="info-value">{{ grn_detail.GateEntryNo }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Invoice No:</div>
+                <div class="info-value">{{ grn_detail.InvoiceNo }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Invoice Date:</div>
+                <div class="info-value">{{ grn_detail.InvoiceDate }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Challan No:</div>
+                <div class="info-value">{{ grn_detail.ChallanNo }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Challan Date:</div>
+                <div class="info-value">{{ grn_detail.ChallanDate }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Vehicle No:</div>
+                <div class="info-value">{{ grn_detail.VehicleNo }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">LR No:</div>
+                <div class="info-value">{{ grn_detail.LrNo }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Transporter:</div>
+                <div class="info-value">{{ grn_detail.Transporter }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">PO No:</div>
+                <div class="info-value">{{ grn_detail.PoNo }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">PO Date:</div>
+                <div class="info-value">31/05/2022</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Eway Bill No:</div>
+                <div class="info-value">{{ grn_detail.EWayBillNo }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">Eway Bill Date:</div>
+                <div class="info-value">{{ grn_detail.EWayBillDate }}</div>
+            </div>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Sr.No</th>
+                    <th>Item Code</th>
+                    <th>Item Desc</th>
+                    <th>Unit</th>
+                    <th>Challan Qty</th>
+                    <th>Short Qty</th>
+                    <th>Received Qty</th>
+                    <th>Rate</th>
+                    <th>Ac Qty</th>
+                    <th>Rej Qty</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in grn_items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.ItemNoCode }}</td>
+                    <td>{{ item.Description }}</td>
+                    <td>{{ item.UnitCode }}</td>
+                    <td>{{ item.ChalQty }}</td>
+                    <td>{{ item.ShortExcessQty }}</td>
+                    <td>{{ item.GrnQty }}</td>
+                    <td>{{ item.Rate }}</td>
+                    <td>{{ item.BalQty }}</td>
+                    <td>{{ item.RejQty }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        
+        <div class="remarks">
+            <div class="remarks-title">Inspection Remarks | User Remarks if any:</div>
+            <div class="remarks-content"></div>
+        </div>
+        
+        <div class="remarks">
+            <div class="remarks-title">Communication Receipt Of User Dept:</div>
+            <div class="remarks-content"></div>
+        </div>
+        
+        <div class="signatures">
+            <div class="signature">
+                <div class="signature-line">Store Sign</div>
+            </div>
+            <div class="signature">
+                <div class="signature-line">QC Sign</div>
+            </div>
+            <div class="signature">
+                <div class="signature-line">User Sign</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for any dynamic functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // You can add date formatting, calculations, or validation here if needed
+            
+            // Example: Format current date if needed
+            function formatDate(date) {
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}/${month}/${year}`;
+            }
+            
+            // Print functionality
+            window.printGRN = function() {
+                window.print();
+            };
+        });
+    </script>
+</body>
+</html>

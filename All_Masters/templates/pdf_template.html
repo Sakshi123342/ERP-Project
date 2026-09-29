@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Item PDF</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 13px; }
+        h2 { margin-top: 30px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        table, th, td { border: 1px solid #000; }
+        th, td { padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+
+    <h1>{{ item.Name }} ({{ item.number }})</h1>
+    <p><strong>Vendor Code:</strong> {{ item.Vendor_Code }}</p>
+    <p><strong>Contact No:</strong> {{ item.Contact_No }}</p>
+    <p><strong>Email:</strong> {{ item.Email_Id }}</p>
+    <p><strong>Address:</strong> {{ item.Address_Line_1 }}, {{ item.City }}, {{ item.Pin_Code }}, {{ item.Country }}</p>
+    <p><strong>Payment Term:</strong> {{ item.Payment_Term }}</p>
+    <p><strong>Currency:</strong> {{ item.Currency }}</p>
+    <p><strong>GST No:</strong> {{ item.GST_No }} / {{ item.GST_No2 }}</p>
+    <p><strong>GST Tax Code:</strong> {{ item.GST_Tax_Code }}</p>
+    <p><strong>Invoice Type:</strong> {{ item.Invoice_Type }}</p>
+    <p><strong>TCS:</strong> {{ item.TCS }}</p>
+    <p><strong>VAT TIN:</strong> {{ item.VAT_TIN }}</p>
+    <p><strong>EORI No:</strong> {{ item.EORI_No }}</p>
+
+    <h2>Buyer Contacts</h2>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Contact No</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Designation</th>
+            <th>Birth Date</th>
+        </tr>
+        {% for contact in buyer_contacts %}
+        <tr>
+            <td>{{ contact.Person_Name }}</td>
+            <td>{{ contact.Contact_No }}</td>
+            <td>{{ contact.Email }}</td>
+            <td>{{ contact.Department }}</td>
+            <td>{{ contact.Designation }}</td>
+            <td>{{ contact.Birth_Date }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Bank Details</h2>
+    <table>
+        <tr>
+            <th>Account Holder</th>
+            <th>Bank Name</th>
+            <th>Branch</th>
+            <th>Account Number</th>
+            <th>IFSC Code</th>
+        </tr>
+        {% for bank in bank_details %}
+        <tr>
+            <td>{{ bank.Account_Holder_name }}</td>
+            <td>{{ bank.Bank_Name }}</td>
+            <td>{{ bank.Branch_Name }}</td>
+            <td>{{ bank.Bank_Account }}</td>
+            <td>{{ bank.IFSC_Code }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>

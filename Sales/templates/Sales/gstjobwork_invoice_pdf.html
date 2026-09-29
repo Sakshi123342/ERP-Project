@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 8mm;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        td,
+        th {
+            border: 1px solid #000;
+            padding: 4px;
+            vertical-align: top;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .small {
+            font-size: 9px;
+        }
+
+        .tiny {
+            font-size: 8px;
+        }
+
+        .header-title {
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .copy {
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .item-row {
+            height: 230px;
+            vertical-align: top;
+        }
+
+        .desc-col {
+            word-break: break-word;
+        }
+
+        .amount-col {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .no-border td {
+            border: none;
+        }
+
+        .sign-table td {
+            border: none;
+            padding-top: 25px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <!-- TOP HEADER -->
+    <table>
+
+        <tr>
+            <td colspan="5" class="center bold">
+                TAX INVOICE (LABOUR CHARGES)
+            </td>
+
+            <td class="copy">
+                ORIGINAL FOR RECIPIENT
+            </td>
+        </tr>
+
+
+        <tr>
+            <td colspan="6" class="center">
+                <div class="header-title">
+                    AYUSH ENTRPRISES
+                </div>
+
+                MIDC WALUJ AURANGABAD 431136 <br>
+
+                [ Issued under section 31 of CGST Act,2017 read with rule 48 ]
+            </td>
+        </tr>
+
+
+
+        <tr>
+            <td width="22%">
+                GSTIN : 27AAMFS1149Q1ZH <br>
+                CIN No : -- <br>
+                PAN No : AAMFS1149Q <br>
+                State : Maharashtra <br>
+                State Code : 27
+            </td>
+
+
+            <td width="15%" class="center">
+                <br><br>
+                QR CODE
+            </td>
+
+
+            <td width="22%">
+                <b>INVOICE NO</b><br>
+                {{invoice.invoice_no}} <br><br>
+
+                P.O No :
+                {{items.0.po_no}} <br>
+
+                Payment Terms :
+                After 30 Days <br>
+
+                Supplier Code :
+            </td>
+
+
+            <td width="15%">
+                <b>Date :</b><br>
+                {{invoice.invoice_date}}<br><br>
+
+                P.O Date :
+                {{items.0.line_podt}}
+            </td>
+
+
+            <td colspan="2">
+                E-way Bill No <br>
+                Electronic Ref No
+            </td>
+
+        </tr>
+
+
+
+        <tr>
+            <td colspan="6">
+                IRN No :
+            </td>
+        </tr>
+
+
+
+        <!-- BILL TO / SHIP TO -->
+        <tr>
+
+            <td colspan="3">
+                <b>Details of Receiver (Billed To)</b><br>
+                {{invoice.bill_to_cust}}<br>
+
+                GSTIN:<br>
+                State Code:
+            </td>
+
+
+            <td colspan="3">
+                <b>Details of Consignee (Shipped To)</b><br>
+
+                {{invoice.ship_to_cust}}<br>
+
+                GSTIN:<br>
+                State Code:
+            </td>
+
+        </tr>
+
+
+
+        <!-- ITEM HEADER -->
+        <tr>
+            <th style="width:5%">Sr</th>
+            <th style="width:33%">Description</th>
+            <th style="width:14%">SAC Code</th>
+            <th style="width:12%">Qty</th>
+            <th style="width:16%">Rate</th>
+            <th style="width:20%">Amount</th>
+        </tr>
+
+
+
+        <!-- ITEMS -->
+        {% for item in items %}
+        <tr class="item-row">
+
+            <td>
+                {{forloop.counter}}
+            </td>
+
+            <td class="desc-col">
+                {{item.description}} <br>
+                {{item.item_code}} <br>
+                Qty :
+                {{item.invoice_qty_kg}} <br>
+                Heat No :
+            </td>
+
+            <td>
+                {{item.hsn_code}}
+            </td>
+
+            <td class="center">
+                {{item.invoice_qty_nos}} NOS
+            </td>
+
+            <td class="center">
+                {{item.jobwork_rate}}
+            </td>
+
+            <td class="amount-col">
+                {{item.amount|floatformat:2}}
+            </td>
+
+        </tr>
+        {% endfor %}
+
+
+
+        <!-- GST TOTALS -->
+        <tr>
+            <td colspan="4">
+                Amount In words
+            </td>
+
+            <td>
+                Ass Value :
+            </td>
+
+            <td class="amount-col">
+                {{gst_details.assessable_value}}
+            </td>
+        </tr>
+
+
+        <tr>
+            <td colspan="4">
+                CGST : Rs One Hundred and Eighteen Only
+            </td>
+
+            <td>
+                CGST {{gst_details.cgst}}%
+            </td>
+
+            <td class="amount-col">
+                {{gst_details.cgst_amt}}
+            </td>
+        </tr>
+
+
+        <tr>
+            <td colspan="4">
+                SGST : Rs One Hundred and Eighteen Only
+            </td>
+
+            <td>
+                SGST {{gst_details.sgst}}%
+            </td>
+
+            <td class="amount-col">
+                {{gst_details.sgst_amt}}
+            </td>
+        </tr>
+
+
+        <tr>
+            <td colspan="4">
+                IGST : Rs Zero Only
+            </td>
+
+            <td>
+                IGST {{gst_details.igst}}%
+            </td>
+
+            <td class="amount-col">
+                {{gst_details.igst_amt}}
+            </td>
+        </tr>
+
+
+
+        <tr>
+            <td colspan="4" class="bold">
+                Net Total Rs Two Thousand Two Hundred...
+            </td>
+
+            <td class="bold">
+                Net Payable :
+            </td>
+
+            <td class="amount-col bold">
+                {{gst_details.gr_total}}
+            </td>
+        </tr>
+
+
+
+
+        <!-- DECLARATION -->
+        <tr>
+            <td colspan="6" class="tiny">
+                I / we certify that our registration certificate under the GST Act,2017
+                is in force and particulars given above are true and correct and
+                tax due has been paid / shall be paid.
+            </td>
+        </tr>
+
+
+
+
+        <!-- TRANSPORT -->
+        <tr>
+
+            <td>
+                Transport Mode
+            </td>
+
+            <td>
+                By Road
+            </td>
+
+            <td>
+                Vehicle No
+            </td>
+
+            <td>
+                {{invoice.vehical_no}}
+            </td>
+
+            <td colspan="2"></td>
+
+        </tr>
+
+
+
+        <tr>
+
+            <td>
+                Transporter Name
+            </td>
+
+            <td>
+                {{invoice.transporter}}
+            </td>
+
+            <td>
+                LR No
+            </td>
+
+            <td>
+                {{invoice.lr_no}}
+            </td>
+
+            <td colspan="2"></td>
+
+        </tr>
+
+
+
+        <tr>
+
+            <td colspan="3">
+                Date & Time of Issue :
+                {{invoice.invoice_date}}
+                {{invoice.invoice_time}}
+            </td>
+
+
+            <td colspan="3">
+                Date & Time of Removal :
+                {{invoice.date_of_removal_of_goods}}
+                {{invoice.time}}
+            </td>
+
+        </tr>
+
+    </table>
+
+
+
+
+    <!-- SIGNATURE -->
+    <table class="sign-table">
+
+        <tr>
+
+            <td width="50%" class="center">
+                Prepared By
+            </td>
+
+            <td width="50%" class="center">
+                for AYUSH ENTRPRISES
+                <br><br>
+                AUTHORISED SIGNATORY
+            </td>
+
+        </tr>
+
+    </table>
+
+
+</body>
+
+</html>

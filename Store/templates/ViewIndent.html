@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indent</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            font-size: 12px;
+        }
+
+        .container {
+            width: 210mm;
+            height: auto;
+            margin: 20px auto;
+            padding: 10mm;
+            position: relative;
+            page-break-after: always;
+            border: 2px solid #000;
+        }
+
+        .header {
+            margin-bottom: 20px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid black;
+            text-align: center;
+
+        }
+
+        .company-info {
+            margin-bottom: 10px;
+            border-bottom: 2px solid black;
+        }
+
+        .manufacturer-text {
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .product-list {
+            line-height: 1.2;
+        }
+
+        .address p {
+            line-height: 1.2;
+            margin-bottom: 2px;
+            text-align: center;
+        }
+
+        .order-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            /* border-top: 2px solid black; */
+            /* border-bottom: 2px solid black; */
+            /* margin: 12px 0; */
+        }
+
+        .order-details {
+            margin-bottom: 10px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .detail-item {
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+        }
+
+        .detail-item label {
+            font-weight: bold;
+            margin-right: 3px;
+            white-space: nowrap;
+        }
+
+        .detail-item span {
+            min-height: 14px;
+            flex-grow: 1;
+            padding: 0 3px;
+        }
+
+        table th, table td {
+            font-size: 11px;
+        }
+
+        [contenteditable="true"]:focus {
+            outline: 1px solid #2196F3;
+            background-color: #f0f8ff;
+        }
+        .footer{
+            text-align: center;
+        }
+
+        @media print {
+            .container {
+                width: 100%;
+                height: 100%;
+                padding: 5mm;
+                border: none;
+            }
+
+            .actions {
+                display: none;
+            }
+        }
+
+        @media (max-width: 210mm) {
+            .container {
+                width: 100%;
+                padding: 10px;
+            }
+
+            .detail-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .actions {
+                position: static;
+                margin-top: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="order-title"> {{ indent.Plant }}  </h1>
+            <p> MIDC WALUJ AURANGABAD 431136</p>
+        </div>
+
+        <h1 class="order-title"> Indent  </h1>
+
+        
+        <div class="order-details mb-3">
+        
+            <div class="row g-2">
+                <div class="col-md-6 col-sm-6 col-8">
+                    <label class=" "><b> Indent No :</b></label>
+                    <span>{{ indent.IndentNo }}</span>
+                </div>
+                <div class="col-md-6 col-sm-6 col-4">
+                    <label class=" "><b> Date & Time :</b></label>
+                    <span>{{ indent.Date }}   {{ indent.Time }}</span>
+                </div>         
+                
+            </div>
+
+        </div>
+
+        <div class="items-table">
+    <table class="table table-bordered table-sm">
+        <thead class="table-light">
+            <tr>
+                <th>Sr</th>
+                <th> Item No</th>
+                <th>Item Desc</th>
+                <th>Unit </th>
+                <th>Qty</th>
+                <th>Type</th>
+                <th>Remark</th>
+                <th>Sch Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in indent_items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.ItemNoCpcCode }}</td>
+                    <td>{{ item.Description }}</td>
+                    <td>{{ item.Unit }}</td>
+                    <td>{{ item.Qty }}</td>
+                    <td>{{ item.Type }}</td>
+                    <td>{{ item.Remark }}</td>
+                    <td>{{ item.SchDate }}</td>
+                </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <strong>Remark :</strong>
+    </div>
+</div>
+
+<div class="footer mt-5">
+<div class="row">
+    <div class="col-6">
+       <strong>ADMIN</strong>
+       <p>Prepared By</p>
+    </div>
+    <div class="col-6">
+        <p>Authorised By</p>
+    </div>
+</div>
+</div>
+
+    </div>
+
+    <!-- Bootstrap JS Bundle (optional if using dropdowns or modals) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

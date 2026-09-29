@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Item Master</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-size: 14px;
+      padding: 30px;
+    }
+    .section-title {
+      font-weight: bold;
+      background-color: #f0f0f0;
+      padding: 6px 10px;
+      margin-top: 20px;
+      border: 1px solid #ccc;
+    }
+    .item-label {
+      font-weight: 600;
+    }
+    .border-box {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-top: 10px;
+    }
+    .a4-border {
+        width: 290mm;         
+        min-height: 297mm;   
+        padding: 20mm;
+        margin: auto;
+        border: 1px solid #000;
+        box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        background: white;
+      }
+      
+  </style>
+</head>
+<body>
+
+    <div class="">
+
+        <div class="container">
+     <h4 class="text-center mb-4">ITEM MASTER</h4>
+        <hr/>
+
+        <div class="row">
+            <div class="col-md-4 mt-3">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Main Group </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> : {{ item.main_group }}  </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mt-3">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Item Group </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> : {{ item.item_group }}  </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mt-3">
+                <div class="row">
+                    <div class="col-6"> 
+                   
+                    </div>
+                    <div class="col-6"> 
+                
+                    </div>
+                </div>
+            </div>
+        </div>    
+
+        <div class="row">
+            <div class="col-md-4 mt-3">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Part No  </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  {{ item.part_no }}  </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mt-3">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>   Item Code  </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  {{ item.Part_Code }}  </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>    
+
+        <div class="row">
+            <div class="col-md-6 mt-3">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Item Desc  </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :   {{ item.Name_Description }}  </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>    
+
+        <div class="row">
+            <div class="col-md-4 mt-3">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Unit Code </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :   {{ item.Unit_Code }}  </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mt-3">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Revision No </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  {{ item.Revision_No }} </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mt-3">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Drawing No </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  {{ item.Drawing_No }} </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>   Rate </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  {{ item.Rate }} </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Min Rate </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  {{ item.Min_Rate }} </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Max  Rate </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  {{ item.Max_Rate }} </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>   Item Class </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  {{ item.Item_ClassName }} </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                    </div>
+                    <div class="col-6"> 
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                    
+                    </div>
+                    <div class="col-6"> 
+          
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>    Store Location </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  {{ item.Store_Location }} </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  HSN Code </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  {{ item.HSN_SAC_Code }} </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> SAC Code </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> : {{ item.SAC_Code }}  </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Item Size </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  {{ item.Item_Size }} </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                       
+                    </div>
+                    <div class="col-6"> 
+            
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> FG STD Cavity</label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  {{ item_master_data.FG_Std_Cavity }}  </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>  
+            
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Cut Wt. </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  0.072 </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Finish Wt </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> : 00.0415 </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Gross Wt </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  0.072 </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>  
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Tool Life </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  0 </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Tool Resharp No </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> : 0 </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> MOQ </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  0 </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>  
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Color Code </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :   </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Make </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Active Sales </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  Active </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> VA Rate (With Scrap) </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> : 0  </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> STD Op Rate </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> : 0 </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Active Purchase </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  Active </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> VA Rate (Without Scrap) </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> : 0  </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Item Section </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> : Select </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Product Category </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  Standard </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Heat Treatement </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :   </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Item Grade </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> : Select </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <!-- <label>   </label> -->
+                    </div>
+                    <div class="col-6"> 
+                        <!-- <span class="item-label"> <b> :   </b> </span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Hardness </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :   </b> </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <!-- <label>   </label> -->
+                    </div>
+                    <div class="col-6"> 
+                        <!-- <span class="item-label"> <b> :   </b> </span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Machine Wt </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :      </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Microstructure </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :   </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Jominy  </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :      </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Rate Remark </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :   </b> </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Other Description  </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :      </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Note </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :   </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Machine  </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :      </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Department  </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :   </b> </span>
+                    </div>
+                </div>
+            </div>
+        </div>   
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> NPD </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> : NO  </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Is Serialize  </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> : NO </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <!-- <label>   </label> -->
+                    </div>
+                    <div class="col-6"> 
+                        <!-- <span class="item-label"> <b> :   </b> </span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> NPD Qty </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> : 0  </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  NPD Due Date  </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> :  </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <!-- <label>   </label> -->
+                    </div>
+                    <div class="col-6"> 
+                        <!-- <span class="item-label"> <b> :   </b> </span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label> Create Date </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> : 4/11/2022 10:20:03  </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <label>  Update Date  </label>
+                    </div>
+                    <div class="col-6"> 
+                        <span class="item-label"> <b> : 4/04/2023 17:31:11 </b> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6"> 
+                        <!-- <label>   </label> -->
+                    </div>
+                    <div class="col-6"> 
+                        <!-- <span class="item-label"> <b> :   </b> </span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+              <div class="table-responsive mt-5">
+                <table class="table table-bordered table-hover">
+                  <thead class="table-light">
+                    <tr>
+                      <th scope="col">Sr. No.</th>
+                      <th scope="col">Specification</th>
+                      <th scope="col">Parameter</th>
+                      <th scope="col">Is Active</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1</td>
+                      <td>Size</td>
+                      <td>10x10 cm</td>
+                      <td>Yes</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+        </div>
+      
+         </div>
+
+    </div>  
+
+</body>
+</html>

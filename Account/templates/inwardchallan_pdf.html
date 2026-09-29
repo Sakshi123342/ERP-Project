@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+body{
+font-family:Arial;
+font-size:11px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+border:1px solid black;
+padding:4px;
+}
+
+.header{
+text-align:center;
+margin-bottom:10px;
+}
+
+.center{
+text-align:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+<h2>AYUSH ENTRPRISES</h2>
+
+<p>GOODS RECEIVED NOTE</p>
+
+</div>
+
+
+<table>
+
+<tr>
+<td><b>GRN No</b></td>
+<td>{{challan.InwardChallanNo}}</td>
+
+<td><b>GRN Date</b></td>
+<td>{{challan.InwardDate}}</td>
+</tr>
+
+
+<tr>
+<td><b>Supplier Name</b></td>
+<td>{{challan.SupplierName}}</td>
+
+<td><b>GIN No</b></td>
+<td>{{challan.GateEntryNo}}</td>
+</tr>
+
+
+<tr>
+<td><b>Invoice No</b></td>
+<td>{{challan.InwardF4No}}</td>
+
+<td><b>Invoice Date</b></td>
+<td>{{challan.InvoiceDate}}</td>
+</tr>
+
+<tr>
+
+<td><b>Challan No</b></td>
+<td>{{challan.ChallanNo}}</td>
+
+<td><b>Challan Date</b></td>
+<td>{{challan.ChallanDate}}</td>
+
+</tr>
+
+
+<tr>
+<td><b>Vehicle No</b></td>
+<td>{{challan.VehicleNo}}</td>
+
+<td><b>LR No</b></td>
+<td>{{challan.LrNo}}</td>
+</tr>
+
+
+<tr>
+<td><b>Transporter</b></td>
+<td colspan="3">
+{{challan.Transporter}}
+</td>
+</tr>
+
+</table>
+
+
+<br>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Sr</th>
+<th>Out No</th>
+<th>Item Desc</th>
+<th>Unit</th>
+<th>Challan Qty</th>
+<th>In Qty</th>
+<th>Rate</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for item in item_details %}
+
+<tr>
+
+<td>{{forloop.counter}}</td>
+
+<td>{{item.OutNo}}</td>
+
+<td>
+
+{{item.ItemDescription}}
+
+{% if item.heat_no %}
+<br>
+Heat No: {{item.heat_no}}
+{% endif %}
+
+</td>
+
+<td>{{item.Unit}}</td>
+
+<td>{{item.ChallanQty}}</td>
+
+<td>{{item.InQtyNOS}}</td>
+
+<td>{{item.JwRate}}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+<br>
+
+<table>
+
+<tr>
+<td>
+<b>Eway Bill No:</b>
+{{challan.EwayBillNo}}
+</td>
+
+<td>
+<b>Eway Bill Date:</b>
+{{challan.InvoiceDate}}
+</td>
+</tr>
+
+</table>
+
+
+<br><br>
+
+<table>
+
+<tr>
+
+<td>
+Inspection Remarks:
+{{challan.Remark}}
+</td>
+
+</tr>
+
+<tr>
+
+<td style="height:100px">
+
+<b>Store Sign:</b>
+
+<br><br>
+
+<b>QC User Sign:</b>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<h1>Assembly Production Report</h1>
+<p><strong>Plant:</strong> {{ entry.Plant }}</p>
+<p><strong>Prod No:</strong> {{ entry.Prod_no }}</p>
+<p><strong>Date:</strong> {{ entry.Date }}</p>
+<p><strong>Shift:</strong> {{ entry.shift }}</p>
+<p><strong>Operator:</strong> {{ entry.operator }}</p>
+<p><strong>FG Item:</strong> {{ entry.FGItem }}</p>
+<p><strong>Production Qty:</strong> {{ entry.ProdQty }}</p>
+
+<h2>Item Stock Details</h2>
+<ul>
+  {% for item in item_stocks %}
+    <li>{{ item.Item_No }} - {{ item.Desc }} | Reg Qty: {{ item.Reg_Qty }} | Stock: {{ item.Stock }}</li>
+  {% endfor %}
+</ul>
+
+<h2>Machine Idle Time</h2>
+<ul>
+  {% for idle in idle_times %}
+    <li>{{ idle.idle_reason }} ({{ idle.from_time }} - {{ idle.to_time }}) Total: {{ idle.total_time }}</li>
+  {% endfor %}
+</ul>
+
+<h2>Rework Reasons</h2>
+<ul>
+  {% for reason in rework_reasons %}
+    <li>{{ reason.Description }} - Qty: {{ reason.Qty }}</li>
+  {% endfor %}
+</ul>
+
+<h2>Reject Reasons</h2>
+<ul>
+  {% for reason in reject_reasons %}
+    <li>{{ reason.Description }} - Qty: {{ reason.Qty }}</li>
+  {% endfor %}
+</ul>
