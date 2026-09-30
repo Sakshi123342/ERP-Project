@@ -4,7 +4,7 @@ from .views import export_items_to_excel
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
-from .views import ItemReportAPIView,ItemDuplicateSearchAPIView,CustomerSupplierDuplicateSearchAPIView
+from .views import ItemReportAPIView,ItemDuplicateSearchAPIView,CustomerSupplierDuplicateSearchAPIView,ItemDuplicateDeleteAPIView,CustomerSupplierDuplicateDeleteAPIView
 
 router = DefaultRouter()
 router.register(r'tools', ToolViewSet)
@@ -199,7 +199,12 @@ urlpatterns = [
     FGItemRMSearchView.as_view(),
     name="fg-items-rm"
     ),
+    # search duplicate item,customer-supplier
     path('item-report/',ItemReportAPIView.as_view(),name='item-report'),
     path('item-duplicate-search/',ItemDuplicateSearchAPIView.as_view(),name='item-duplicate-search'),
     path('customer-supplier-duplicate-search/',CustomerSupplierDuplicateSearchAPIView.as_view(),name='customer-supplier-duplicate-search'),
+
+    # delete duplicate item,customer-supplier
+    path('item-duplicate-delete/',ItemDuplicateDeleteAPIView.as_view(),name='item-duplicate-delete'),
+    path('customer-supplier-duplicate-delete/',CustomerSupplierDuplicateDeleteAPIView.as_view(),name='customer-supplier-duplicate-delete'),
 ]

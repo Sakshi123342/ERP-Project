@@ -2669,7 +2669,7 @@ class FGItemRMSearchView(APIView):
 
         )
 
-# All_Masters->Master Report Duplicate Search API
+# All_Masters->Master Report-> Item report(Search Duplicate)
 from collections import defaultdict
 
 from rest_framework.views import APIView
@@ -2706,16 +2706,7 @@ class ItemReportAPIView(APIView):
             },
             status=status.HTTP_200_OK
         )
-
-# from collections import defaultdict
-
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
-
-# from .models import ItemTable
-
-
+# All Masters -> Master Report -> Item(search duplicate)
 class ItemDuplicateSearchAPIView(APIView):
 
     def get(self, request):
@@ -2865,7 +2856,7 @@ class ItemDuplicateSearchAPIView(APIView):
             status=status.HTTP_200_OK
         )
 
-# All Masters -> Master Report-> Customer Supplier
+# All Masters -> Master Report-> Customer Supplier(search duplicate)
 from collections import defaultdict
 
 from rest_framework.views import APIView
@@ -3016,6 +3007,497 @@ class CustomerSupplierDuplicateSearchAPIView(APIView):
                 status=status.HTTP_200_OK
             )
 
+# All Masters -> Master Report -> Item(delete duplicate)
+class ItemDuplicateDeleteAPIView(APIView):
+    def delete(self,request):
+        # query parameters
 
+        report_name = request.query_params.get("report_name")
+        main_group = request.query_params.get("main_group")
+        duplicate_field = request.query_params.get("duplicate_field")
 
+        keep_id = request.query_params.get("keep_id")
+        delete_all = request.query_params.get("delete_all","false").lower()=="true"
+         # 1. Get all Item records
+        queryset = ItemTable.objects.all()
 
+        # 2. Main Group Filter
+        if main_group and main_group.upper() != "ALL":
+
+            queryset = queryset.filter(
+                main_group__iexact=main_group
+            )
+
+        # 3. Get records
+        records = list(
+            queryset.values()
+        )
+
+        # Fields which should NOT be checked
+        exclude_fields = [
+            "id",
+            "part_no",
+            "created_by",
+            "is_verified",
+            "main_group",
+        ]
+
+        # 4. Get all valid duplicate-check fields
+        all_fields = [
+            field.name
+            for field in ItemTable._meta.fields
+            if field.name not in exclude_fields
+        ]
+
+        # 5. Specific duplicate field
+        if duplicate_field:
+
+            requested_field = duplicate_field.strip().lower()
+
+            matched_field = None
+
+            for field in all_fields:
+
+                if field.lower() == requested_field:
+
+                    matched_field = field
+                    break
+
+            # Invalid duplicate field
+            if matched_field is None:
+
+                return Response(
+                    {
+                        "error": "Invalid duplicate_field",
+                        "received": duplicate_field,
+                        "available_fields": all_fields
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            duplicate_check_fields = [
+                matched_field
+            ]
+
+        # 6. Check all fields
+        else:
+
+            duplicate_check_fields = all_fields
+
+        # 7. Store duplicate IDs
+        duplicate_ids = set()
+
+        # Store duplicate fields for each record
+        duplicate_fields_by_id = defaultdict(set)
+
+        # 8. Duplicate checking
+        for field in duplicate_check_fields:
+
+            value_map = defaultdict(list)
+
+            for record in records:
+
+                value = record.get(field)
+
+                # Ignore NULL
+                if value is None:
+                    continue
+
+                # Remove spaces
+                value = str(value).strip()
+
+                # Ignore blank
+                if value == "":
+                    continue
+
+                # Case-insensitive comparison
+                value_key = value.casefold()
+
+                value_map[value_key].append(
+                    record["id"]
+                )
+
+            # 9. Find duplicate values
+            for value, ids in value_map.items():
+
+                if len(ids) > 1:
+
+                    for record_id in ids:
+
+                        duplicate_ids.add(
+                            record_id
+                        )
+
+                        duplicate_fields_by_id[
+                            record_id
+                        ].add(field)
+
+        # 10. No duplicate found
+        if not duplicate_ids:
+
+            return Response(
+                {
+                    "report_name": report_name,
+                    "main_group": main_group,
+                    "duplicate_field": duplicate_field,
+                    "message": "No duplicate records found.",
+                    "deleted_ids": [],
+                    "deleted_count": 0
+                },
+                status=status.HTTP_200_OK
+            )
+
+        # Convert set to list
+        duplicate_ids = list(duplicate_ids)
+
+        # 11. Prepare duplicate records
+        duplicate_records = [
+            {
+                "id": record_id,
+                "duplicate_fields": sorted(
+                    duplicate_fields_by_id[record_id]
+                )
+            }
+            for record_id in duplicate_ids
+        ]
+        # no delete action requested,return duplicate result only
+        if not keep_id and delete_all:
+            return Response(
+             {
+                "report_name":report_name,
+                "main_group":main_group,
+                "duplicate_field":duplicate_field,
+                "total_filtered_records":len(records),
+                "total_duplicate_records":len(duplicate_records),
+                "data":duplicate_records
+             },
+            status=status.HTTP_200_OK
+        )
+
+        # 12. Delete ALL duplicates
+        if delete_all:
+
+            ItemTable.objects.filter(
+                id__in=duplicate_ids
+            ).delete()
+
+            return Response(
+                {
+                    "report_name": report_name,
+                    "main_group": main_group,
+                    "duplicate_field": duplicate_field,
+                    "action": "delete_all",
+                    "deleted_ids": duplicate_ids,
+                    "deleted_count": len(duplicate_ids),
+                    "duplicate_records": duplicate_records
+                },
+                status=status.HTTP_200_OK
+            )
+
+        # 13. Keep one record
+        if not keep_id:
+
+            return Response(
+                {
+                    "error": "keep_id is required.",
+                    "duplicate_ids": duplicate_ids,
+                    "duplicate_records": duplicate_records
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # 14. Convert keep_id to integer
+        try:
+
+            keep_id = int(keep_id)
+
+        except ValueError:
+
+            return Response(
+                {
+                    "error": "keep_id must be a valid integer."
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # 15. Check keep ID
+        if keep_id not in duplicate_ids:
+
+            return Response(
+                {
+                    "error": "keep_id is not present in duplicate records.",
+                    "keep_id": keep_id,
+                    "duplicate_ids": duplicate_ids,
+                    "duplicate_records": duplicate_records
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # 16. Delete all except keep_id
+        delete_ids = [
+            record_id
+            for record_id in duplicate_ids
+            if record_id != keep_id
+        ]
+
+        ItemTable.objects.filter(
+            id__in=delete_ids
+        ).delete()
+
+        # 17. Final response
+        return Response(
+            {
+                "report_name": report_name,
+                "main_group": main_group,
+                "duplicate_field": duplicate_field,
+                "action": "keep_one_delete_rest",
+                "kept_id": keep_id,
+                "deleted_ids": delete_ids,
+                "deleted_count": len(delete_ids),
+                "duplicate_records": duplicate_records
+            },
+            status=status.HTTP_200_OK
+        )
+
+# All Masters -> Master Report -> Customer-Supplier(delete duplicate)
+class CustomerSupplierDuplicateDeleteAPIView(APIView):
+
+    def delete(self, request):
+
+        # Query Parameters
+        report_name = request.query_params.get("report_name")
+        customer_type = request.query_params.get("type")
+        duplicate_field = request.query_params.get("duplicate_field")
+
+        keep_id = request.query_params.get("keep_id")
+
+        delete_all = request.query_params.get(
+            "delete_all", "false"
+        ).lower() == "true"
+
+        # 1. Get all customer/supplier records
+        queryset = Item.objects.all()
+
+        # 2. Customer/Supplier filter
+        if customer_type and customer_type.upper() != "ALL":
+
+            queryset = queryset.filter(
+                type__iexact=customer_type
+            )
+
+        # 3. Get records
+        records = list(
+            queryset.values()
+        )
+
+        # Fields to exclude from duplicate checking
+        exclude_fields = [
+            "id",
+            "type",
+            "created_by",
+            "is_verified",
+        ]
+
+        # 4. Get duplicate-checking fields
+        all_fields = [
+            field.name
+            for field in Item._meta.fields
+            if field.name not in exclude_fields
+        ]
+
+        # 5. Specific duplicate field
+        if duplicate_field:
+
+            requested_field = duplicate_field.strip().lower()
+
+            matched_field = None
+
+            for field in all_fields:
+
+                if field.lower() == requested_field:
+
+                    matched_field = field
+                    break
+
+            # Invalid duplicate field
+            if matched_field is None:
+
+                return Response(
+                    {
+                        "error": "Invalid duplicate_field",
+                        "received": duplicate_field,
+                        "available_fields": all_fields
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            duplicate_check_fields = [
+                matched_field
+            ]
+
+        # Check all fields
+        else:
+
+            duplicate_check_fields = all_fields
+
+        # 6. Store duplicate IDs
+        duplicate_ids = set()
+
+        # Store duplicate fields for each record
+        duplicate_fields_by_id = defaultdict(set)
+
+        # 7. Duplicate checking
+        for field in duplicate_check_fields:
+
+            value_map = defaultdict(list)
+
+            for record in records:
+
+                value = record.get(field)
+
+                # Ignore NULL
+                if value is None:
+                    continue
+
+                # Remove spaces
+                value = str(value).strip()
+
+                # Ignore blank
+                if value == "":
+                    continue
+
+                # Case-insensitive comparison
+                value_key = value.casefold()
+
+                value_map[value_key].append(
+                    record["id"]
+                )
+
+            # 8. Find duplicate values
+            for value, ids in value_map.items():
+
+                if len(ids) > 1:
+
+                    for record_id in ids:
+
+                        duplicate_ids.add(
+                            record_id
+                        )
+
+                        duplicate_fields_by_id[
+                            record_id
+                        ].add(field)
+
+        # 9. No duplicate found
+        if not duplicate_ids:
+
+            return Response(
+                {
+                    "report_name": report_name,
+                    "type": customer_type,
+                    "duplicate_field": duplicate_field,
+                    "message": "No duplicate records found.",
+                    "deleted_ids": [],
+                    "deleted_count": 0
+                },
+                status=status.HTTP_200_OK
+            )
+
+        # Convert set to list
+        duplicate_ids = list(duplicate_ids)
+
+        # Prepare duplicate records
+        duplicate_records = [
+            {
+                "id": record_id,
+                "duplicate_fields": sorted(
+                    duplicate_fields_by_id[record_id]
+                )
+            }
+            for record_id in duplicate_ids
+        ]
+
+        # 10. Delete ALL duplicates
+        if delete_all:
+
+            Item.objects.filter(
+                id__in=duplicate_ids
+            ).delete()
+
+            return Response(
+                {
+                    "report_name": report_name,
+                    "type": customer_type,
+                    "duplicate_field": duplicate_field,
+                    "action": "delete_all",
+                    "deleted_ids": duplicate_ids,
+                    "deleted_count": len(duplicate_ids),
+                    "duplicate_records": duplicate_records
+                },
+                status=status.HTTP_200_OK
+            )
+
+        # 11. Keep one record
+        if not keep_id:
+
+            return Response(
+                {
+                    "error": "keep_id is required.",
+                    "duplicate_ids": duplicate_ids,
+                    "duplicate_records": duplicate_records
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # 12. Convert keep_id to integer
+        try:
+
+            keep_id = int(keep_id)
+
+        except ValueError:
+
+            return Response(
+                {
+                    "error": "keep_id must be a valid integer."
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # 13. Check keep ID
+        if keep_id not in duplicate_ids:
+
+            return Response(
+                {
+                    "error": "keep_id is not present in duplicate records.",
+                    "keep_id": keep_id,
+                    "duplicate_ids": duplicate_ids,
+                    "duplicate_records": duplicate_records
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # 14. Delete all except keep_id
+        delete_ids = [
+            record_id
+            for record_id in duplicate_ids
+            if record_id != keep_id
+        ]
+
+        Item.objects.filter(
+            id__in=delete_ids
+        ).delete()
+
+        # 15. Final response
+        return Response(
+            {
+                "report_name": report_name,
+                "type": customer_type,
+                "duplicate_field": duplicate_field,
+                "action": "keep_one_delete_rest",
+                "kept_id": keep_id,
+                "deleted_ids": delete_ids,
+                "deleted_count": len(delete_ids),
+                "duplicate_records": duplicate_records
+            },
+            status=status.HTTP_200_OK
+        )
