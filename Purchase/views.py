@@ -1520,7 +1520,7 @@ from django.template.loader import get_template
 from weasyprint import HTML
 from .models import Indent
 from .serializers import IndentSerializer
-
+from decimal import Decimal, InvalidOperation
 class IndentDetailAPIView(generics.ListAPIView):
     queryset = Indent.objects.all()
     serializer_class = IndentSerializer
@@ -1562,15 +1562,292 @@ def generate_indent_pdf(request, id):
     indent = get_object_or_404(Indent, id=id)
     indent_items = indent.New_Indent.all()
 
-    template = get_template('ViewIndent.html')  # Update this with your actual template name
-    html_content = template.render({'indent': indent, 'indent_items': indent_items})
+    processed_items = []
 
+
+    for indent_item in indent_items:
+
+        part_no = indent_item.ItemNoCpcCode
+
+        # ItemTable se item find
+        item = ItemTable.objects.filter(
+        part_no=part_no
+        ).first()
+
+        
+        hsn_code = ""
+
+        cgst_rate = Decimal("0")
+        sgst_rate = Decimal("0")
+        igst_rate = Decimal("0")
+        utgst_rate = Decimal("0")
+
+        if item:
+          hsn_code = item.HSN_SAC_Code or ""
+
+          # TaxDetails se GST rates
+          gst = TaxDetails.objects.filter(
+            HSN_SAC_Code=hsn_code
+          ).first()
+          
+          if gst:
+            try:
+                cgst_rate = Decimal(gst.CGST or "0")
+            except (InvalidOperation, TypeError):
+                cgst_rate = Decimal("0")
+
+            try:
+                sgst_rate = Decimal(gst.SGST or "0")
+            except (InvalidOperation, TypeError):
+                sgst_rate = Decimal("0")
+
+            try:
+                igst_rate = Decimal(gst.IGST or "0")
+            except (InvalidOperation, TypeError):
+                igst_rate = Decimal("0")
+
+            try:
+                utgst_rate = Decimal(gst.UTGST or "0")
+            except (InvalidOperation, TypeError):
+                utgst_rate = Decimal("0")
+
+        # Quantity
+        try:
+          qty = Decimal(indent_item.Qty or "0")
+        except (InvalidOperation, TypeError):
+          qty = Decimal("0")
+
+        # Abhi rate temporary 0 hai
+        rate = Decimal("0")
+
+        taxable_value = qty * rate
+
+        cgst_amount = taxable_value * cgst_rate / Decimal("100")
+        sgst_amount = taxable_value * sgst_rate / Decimal("100")
+        igst_amount = taxable_value * igst_rate / Decimal("100")
+        utgst_amount = taxable_value * utgst_rate / Decimal("100")
+
+        total_gst = (
+           cgst_amount
+           + sgst_amount
+           + igst_amount
+           + utgst_amount
+        )
+
+        total_amount = taxable_value + total_gst
+
+        processed_items.append({
+          "item": indent_item,
+          "hsn_code": hsn_code,
+          "qty": qty,
+          "rate": rate,
+          "taxable_value": taxable_value,
+
+          "cgst_rate": cgst_rate,
+          "cgst_amount": cgst_amount,
+
+          "sgst_rate": sgst_rate,
+          "sgst_amount": sgst_amount,
+
+          "igst_rate": igst_rate,
+          "igst_amount": igst_amount,
+
+          "utgst_rate": utgst_rate,
+          "utgst_amount": utgst_amount,
+
+          "total_gst": total_gst,
+          "total_amount": total_amount,
+        })
+    template = get_template('PurchaseIndent.html')  # Update this with your actual template name
+    html_content = template.render({'indent': indent,'indent_items': indent_items,'processed_items': processed_items,})
     pdf_file = HTML(string=html_content).write_pdf()
     response = HttpResponse(pdf_file, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="indent_{id}.pdf"'
     return response
 
+# Purchase order PDF
+# from decimal import Decimal, InvalidOperation
+# from django.shortcuts import get_object_or_404, render
+# from django.http import HttpResponse
+# from django.template.loader import get_template
+# from weasyprint import HTML
 
+# def generate_indent_pdf(request, id):
+#     indent = get_object_or_404(Indent, id=id)
+#     indent_items = indent.New_Indent.all()
+
+#     processed_items = []
+
+#     for indent_item in indent_items:
+
+#         part_no = indent_item.ItemNoCpcCode
+
+#         # Find item from ItemTable
+#         item = ItemTable.objects.filter(
+#             part_no=part_no
+#         ).first()
+
+#         hsn_code = ""
+#         cgst_rate = Decimal("0")
+#         sgst_rate = Decimal("0")
+#         igst_rate = Decimal("0")
+#         utgst_rate = Decimal("0")
+
+#         if item:
+#             hsn_code = item.HSN_SAC_Code or ""
+
+#             # Find GST master according to HSN
+#             gst = TaxDetails.objects.filter(
+#                 HSN_SAC_Code=hsn_code
+#             ).first()
+
+#             if gst:
+#                 try:
+#                     cgst_rate = Decimal(gst.CGST or "0")
+#                 except (InvalidOperation, TypeError):
+#                     cgst_rate = Decimal("0")
+
+#                 try:
+#                     sgst_rate = Decimal(gst.SGST or "0")
+#                 except (InvalidOperation, TypeError):
+#                     sgst_rate = Decimal("0")
+
+#                 try:
+#                     igst_rate = Decimal(gst.IGST or "0")
+#                 except (InvalidOperation, TypeError):
+#                     igst_rate = Decimal("0")
+
+#                 try:
+#                     utgst_rate = Decimal(gst.UTGST or "0")
+#                 except (InvalidOperation, TypeError):
+#                     utgst_rate = Decimal("0")
+
+#         # Quantity
+#         try:
+#             qty = Decimal(indent_item.Qty or "0")
+#         except (InvalidOperation, TypeError):
+#             qty = Decimal("0")
+
+#         # ------------------------------------------------
+#         # IMPORTANT:
+#         # GST calculation needs taxable value
+#         # ------------------------------------------------
+#         #
+#         # If you have rate/price in ItemTable:
+#         #
+#         # taxable_value = qty * rate
+#         #
+#         # For now using 0 if rate is not available.
+#         #
+
+#         rate = Decimal("0")
+
+#         taxable_value = qty * rate
+
+#         cgst_amount = taxable_value * cgst_rate / Decimal("100")
+#         sgst_amount = taxable_value * sgst_rate / Decimal("100")
+#         igst_amount = taxable_value * igst_rate / Decimal("100")
+#         utgst_amount = taxable_value * utgst_rate / Decimal("100")
+
+#         total_gst = (
+#             cgst_amount
+#             + sgst_amount
+#             + igst_amount
+#             + utgst_amount
+#         )
+
+#         total_amount = taxable_value + total_gst
+
+#         processed_items.append({
+#             "item": indent_item,
+#             "part_no": part_no,
+#             "hsn_code": hsn_code,
+
+#             "qty": qty,
+#             "rate": rate,
+#             "taxable_value": taxable_value,
+
+#             "cgst_rate": cgst_rate,
+#             "cgst_amount": cgst_amount,
+
+#             "sgst_rate": sgst_rate,
+#             "sgst_amount": sgst_amount,
+
+#             "igst_rate": igst_rate,
+#             "igst_amount": igst_amount,
+
+#             "utgst_rate": utgst_rate,
+#             "utgst_amount": utgst_amount,
+
+#             "total_gst": total_gst,
+#             "total_amount": total_amount,
+#         })
+
+#     # Grand totals
+#     total_taxable = sum(
+#         item["taxable_value"]
+#         for item in processed_items
+#     )
+
+#     total_cgst = sum(
+#         item["cgst_amount"]
+#         for item in processed_items
+#     )
+
+#     total_sgst = sum(
+#         item["sgst_amount"]
+#         for item in processed_items
+#     )
+
+#     total_igst = sum(
+#         item["igst_amount"]
+#         for item in processed_items
+#     )
+
+#     total_utgst = sum(
+#         item["utgst_amount"]
+#         for item in processed_items
+#     )
+
+#     total_gst = sum(
+#         item["total_gst"]
+#         for item in processed_items
+#     )
+
+#     grand_total = sum(
+#         item["total_amount"]
+#         for item in processed_items
+#     )
+
+#     template = get_template("ViewIndent.html")
+
+#     html_content = template.render({
+#         "indent": indent,
+#         "indent_items": processed_items,
+
+#         "total_taxable": total_taxable,
+#         "total_cgst": total_cgst,
+#         "total_sgst": total_sgst,
+#         "total_igst": total_igst,
+#         "total_utgst": total_utgst,
+#         "total_gst": total_gst,
+#         "grand_total": grand_total,
+#     })
+
+#     pdf_file = HTML(
+#         string=html_content
+#     ).write_pdf()
+
+#     response = HttpResponse(
+#         pdf_file,
+#         content_type="application/pdf"
+#     )
+
+#     response["Content-Disposition"] = (
+#         f'inline; filename="indent_{id}.pdf"'
+#     )
+
+#     return response
 from rest_framework.generics import ListAPIView
 from .models import Indent
 from .serializers import IndentSerializer

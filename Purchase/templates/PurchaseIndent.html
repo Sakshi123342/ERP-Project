@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Indent</title>
+
+
+    <style>
+        /* ================= PAGE ================= */
+
+        @page {
+            size: A4 portrait;
+            margin: 5mm;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #000;
+        }
+
+        /* ================= MAIN CONTAINER ================= */
+
+        .container {
+            width: 100%;
+            margin: 0;
+            padding: 10px;
+            border: 2px solid #000;
+            box-sizing: border-box;
+        }
+
+        /* ================= HEADER ================= */
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .header p {
+            margin: 3px 0;
+            font-size: 11px;
+        }
+
+        .header .document-title {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: normal;
+        }
+
+        /* ================= TOP INFORMATION ================= */
+
+        .info-section {
+            display: flex;
+            width: 100%;
+            border: 1px solid #000;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .info-left {
+            width: 50%;
+            border-right: 1px solid #000;
+            box-sizing: border-box;
+        }
+
+        .info-right {
+            width: 50%;
+            box-sizing: border-box;
+        }
+
+        .info-row {
+            display: flex;
+            width: 100%;
+            min-height: 28px;
+            border-bottom: 1px solid #000;
+            box-sizing: border-box;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            width: 40%;
+            padding: 6px;
+            font-weight: bold;
+            border-right: 1px solid #000;
+            box-sizing: border-box;
+        }
+
+        .info-value {
+            width: 60%;
+            padding: 6px;
+            box-sizing: border-box;
+            word-wrap: break-word;
+        }
+
+        /* ================= INTRODUCTION ================= */
+
+        .intro {
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        .intro p {
+            margin: 5px 0;
+        }
+
+        /* ================= SECTION TITLE ================= */
+
+        .section-title {
+            font-size: 18px;
+            margin: 8px 0;
+            font-weight: normal;
+        }
+
+        /* ================= COMMON TABLE ================= */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 5px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* ================= ITEM TABLE ================= */
+
+        .item-table {
+            width: 100%;
+            table-layout: fixed;
+            font-size: 9px;
+        }
+
+        .item-table th,
+        .item-table td {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .item-table th {
+            font-size: 9px;
+        }
+
+        .item-table td {
+            font-size: 9px;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        /* Column widths */
+
+        .col-sr {
+            width: 4%;
+        }
+
+        .col-item {
+            width: 10%;
+        }
+
+        .col-description {
+            width: 15%;
+        }
+
+        .col-unit {
+            width: 6%;
+        }
+
+        .col-machine {
+            width: 13%;
+        }
+
+        .col-qty {
+            width: 6%;
+        }
+
+        .col-type {
+            width: 7%;
+        }
+
+        .col-remark {
+            width: 11%;
+        }
+
+        .col-use {
+            width: 9%;
+        }
+
+        .col-moref {
+            width: 8%;
+        }
+
+        .col-date {
+            width: 11%;
+        }
+
+        /* ================= NO DATA ================= */
+
+        .no-data {
+            text-align: center;
+            padding: 12px;
+        }
+
+        /* ================= TERMS & CONDITIONS ================= */
+
+        .terms-section {
+            margin-top: 15px;
+        }
+
+        .terms-section h3 {
+            font-size: 14px;
+            font-weight: normal;
+            margin: 0 0 8px 0;
+        }
+
+        .terms-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
+
+        .terms-table td {
+            border: 1px solid #000;
+            padding: 5px;
+        }
+
+        .terms-table td:first-child {
+            width: 25%;
+            font-weight: bold;
+        }
+
+        /* ================= SIGNATURE ================= */
+
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 50px;
+        }
+
+        .signature-box {
+            width: 45%;
+            text-align: center;
+        }
+
+        .signature-line {
+            border-top: 1px solid #000;
+            margin-top: 40px;
+            padding-top: 5px;
+        }
+
+        /* ================= DETAILED TERMS ================= */
+
+        .detailed-terms {
+            margin-top: 30px;
+            font-size: 9px;
+        }
+
+        .detailed-terms p {
+            margin: 5px 0;
+        }
+
+        .detailed-terms ol {
+            margin-top: 5px;
+            padding-left: 20px;
+        }
+
+        .detailed-terms li {
+            margin-bottom: 3px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 9px;
+        }
+
+        /* ================= PRINT ================= */
+
+        @media print {
+
+            body {
+                padding: 0;
+                margin: 0;
+            }
+
+            .container {
+                border: 2px solid #000;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <div class="container">
+
+
+        <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+        <div class="header">
+
+            <h1>
+                <b>AYUSH ENTERPRISES</b>
+            </h1>
+
+            <p>
+                MIDC WALUJ AURANGABAD 431136
+            </p>
+
+
+
+            <h1 class="document-title">
+                Indent
+            </h1>
+
+        </div>
+
+
+        <!-- =====================================================
+         INDENT INFORMATION
+    ====================================================== -->
+
+        <div class="info-section">
+
+
+            <!-- LEFT SIDE -->
+
+            <div class="info-left">
+
+                <div class="info-row">
+                    <div class="right-info">
+
+                    </div>
+
+                    <div class="info-label">
+                        Plant
+                    </div>
+
+                    <div class="info-value">
+                        {{ indent.Plant|default:"-" }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-label">
+                        Series
+                    </div>
+
+                    <div class="info-value">
+                        {{ indent.Series|default:"-" }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-label">
+                        Indent No.
+                    </div>
+
+                    <div class="info-value">
+                        {{ indent.IndentNo|default:"-" }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-label">
+                        Date
+                    </div>
+
+                    <div class="info-value">
+                        {{ indent.Date|default:"-" }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-label">
+                        Time
+                    </div>
+
+                    <div class="info-value">
+                        {{ indent.Time|default:"-" }}
+                    </div>
+
+                </div>
+                <div class="info-row">
+
+                    <div class="info-label">
+                        GST No.
+                    </div>
+
+                    <div class="info-value">
+                        27ETJPK9283D1Z8
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- RIGHT SIDE -->
+
+            <div class="info-right">
+
+                <div class="info-row">
+
+                    <div class="info-label">
+                        Category
+                    </div>
+
+                    <div class="info-value">
+                        {{ indent.Category|default:"-" }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-label">
+                        CPC Code
+                    </div>
+
+                    <div class="info-value">
+                        {{ indent.CPCCode|default:"-" }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-label">
+                        Work Order
+                    </div>
+
+                    <div class="info-value">
+                        {{ indent.WorkOrder|default:"-" }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-label">
+                        Status
+                    </div>
+
+                    <div class="info-value">
+                        {{ indent.Auth|default:"-" }}
+                    </div>
+
+                </div>
+
+                <div class="info-row">
+
+                    <div class="info-label">
+                        Remark
+                    </div>
+
+                    <div class="info-value">
+                        {{ indent.Remark|default:"-" }}
+                    </div>
+
+
+                </div>
+                <div class="info-row">
+
+                    <div class="info-label">
+                       PAN No.
+                    </div>
+
+                    <div class="info-value">
+                        ETJPK9283D
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+         INTRODUCTION
+    ====================================================== -->
+
+        <div class="intro">
+
+            <p>
+                Dear Sir,
+            </p>
+
+            <p>
+                We are pleased to place the indent for the following requirements.
+            </p>
+
+        </div>
+
+
+        <!-- =====================================================
+         ITEM DETAILS
+    ====================================================== -->
+
+       <h4 style="margin-top: 10px; margin-bottom: 5px;">
+    Item
+</h4>
+
+<table style="
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9px;
+">
+
+    <!-- HEADER -->
+    <thead>
+        <tr>
+
+            <th style="border: 1px solid #000; padding: 5px;">
+                Item No
+            </th>
+
+            <th style="border: 1px solid #000; padding: 5px;">
+                Item Description
+            </th>
+
+            <th style="border: 1px solid #000; padding: 5px;">
+                HSN
+            </th>
+
+            <th style="border: 1px solid #000; padding: 5px;">
+                Qty
+            </th>
+
+            <th style="border: 1px solid #000; padding: 5px;">
+                Unit
+            </th>
+
+            <th style="border: 1px solid #000; padding: 5px;">
+                Rate
+            </th>
+
+            <th style="border: 1px solid #000; padding: 5px;">
+                Disc %
+            </th>
+
+            <th style="border: 1px solid #000; padding: 5px;">
+                Total
+            </th>
+
+        </tr>
+    </thead>
+
+
+    <!-- ITEM DATA -->
+    <tbody>
+
+        {% for gst_item in processed_items %}
+
+        <tr>
+
+            <td style="
+                border: 1px solid #000;
+                padding: 5px;
+            ">
+                {{ gst_item.item.ItemNoCpcCode }}
+            </td>
+
+
+            <td style="
+                border: 1px solid #000;
+                padding: 5px;
+            ">
+                {{ gst_item.item.Description }}
+            </td>
+
+
+            <td style="
+                border: 1px solid #000;
+                padding: 5px;
+            ">
+
+                {% if gst_item.gst_message %}
+                    {{ gst_item.gst_message }}
+                {% else %}
+                    {{ gst_item.hsn_code|default:"-" }}
+                {% endif %}
+
+            </td>
+
+
+            <td style="
+                border: 1px solid #000;
+                padding: 5px;
+            ">
+                {{ gst_item.item.Qty }}
+            </td>
+
+
+            <td style="
+                border: 1px solid #000;
+                padding: 5px;
+            ">
+                {{ gst_item.item.Unit }}
+            </td>
+
+
+            <td style="
+                border: 1px solid #000;
+                padding: 5px;
+            ">
+                {{ gst_item.rate|floatformat:2 }}
+            </td>
+
+
+            <td style="
+                border: 1px solid #000;
+                padding: 5px;
+            ">
+                -
+            </td>
+
+
+            <td style="
+                border: 1px solid #000;
+                padding: 5px;
+            ">
+                {{ gst_item.taxable_value|floatformat:2 }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+
+        <!-- TOTAL -->
+        <tr>
+
+            <td
+                colspan="5"
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+                Total (Rs)
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+                {{ total_taxable|floatformat:2 }}
+            </td>
+
+        </tr>
+
+
+        <!-- TOC -->
+        <tr>
+
+            <td
+                colspan="5"
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+                TOC Amt.(Rs.)
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+                0.00
+            </td>
+
+        </tr>
+
+
+        <!-- NTOC -->
+        <tr>
+
+            <td
+                colspan="5"
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+                NTOC Amt.(Rs.)
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+                0.00
+            </td>
+
+        </tr>
+
+
+        <!-- CGST -->
+        <tr>
+
+            <td
+                colspan="5"
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+                CGST (Rs.)
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+                {{ total_cgst|floatformat:2 }}
+            </td>
+
+        </tr>
+
+
+        <!-- SGST -->
+        <tr>
+
+            <td
+                colspan="5"
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+                SGST (Rs.)
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+                {{ total_sgst|floatformat:2 }}
+            </td>
+
+        </tr>
+
+
+        <!-- IGST -->
+        <tr>
+
+            <td
+                colspan="5"
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+                IGST (Rs.)
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+                {{ total_igst|floatformat:2 }}
+            </td>
+
+        </tr>
+
+
+        <!-- GROSS AMOUNT -->
+        <tr>
+
+            <td
+                colspan="5"
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                ">
+                Gross Amount in Words
+            </td>
+
+            <td
+                colspan="2"
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                    font-weight: bold;
+                ">
+                Gross Amount (Rs.)
+            </td>
+
+            <td
+                style="
+                    border: 1px solid #000;
+                    padding: 5px;
+                    font-weight: bold;
+                ">
+                {{ grand_total|floatformat:2 }}
+            </td>
+
+        </tr>
+
+    </tbody>
+
+</table>
+        <!-- =====================================================
+         TERMS & CONDITIONS
+    ====================================================== -->
+
+        <div class="terms-section">
+
+            <h3>
+                Terms &amp; Conditions:
+            </h3>
+
+
+            <table class="terms-table">
+
+                <tr>
+
+                    <td>
+                        Plant
+                    </td>
+
+                    <td>
+                        {{ indent.Plant|default:"-" }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Category
+                    </td>
+
+                    <td>
+                        {{ indent.Category|default:"-" }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Work Order
+                    </td>
+
+                    <td>
+                        {{ indent.WorkOrder|default:"-" }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        CPC Code
+                    </td>
+
+                    <td>
+                        {{ indent.CPCCode|default:"-" }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Remark
+                    </td>
+
+                    <td>
+                        {{ indent.Remark|default:"-" }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Authorization Status
+                    </td>
+
+                    <td>
+                        {{ indent.Auth|default:"-" }}
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+
+        
+        <!-- =====================================================
+         SIGNATURE
+    ====================================================== -->
+
+        <div class="signature-section">
+
+
+            <div class="signature-box">
+
+                <div class="signature-line">
+                    Prepared By
+                </div>
+
+            </div>
+
+
+            <div class="signature-box">
+
+                <div class="signature-line">
+                    For AYUSH ENTERPRISES
+                </div>
+
+                <div>
+                    Approved By
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+         DETAILED TERMS
+    ====================================================== -->
+
+        <div class="detailed-terms">
+
+            <p>
+                <strong>Instructions:</strong>
+                Any discrepancy in the indent should be communicated within 24 hours.
+            </p>
+
+
+            <p>
+                <strong>TERMS &amp; CONDITIONS:</strong>
+            </p>
+
+
+            <ol>
+
+                <li>
+                    All required information should be verified before processing the indent.
+                </li>
+
+                <li>
+                    The requested material should be supplied as per the approved indent details.
+                </li>
+
+                <li>
+                    Quantity and unit should be checked before issue or purchase processing.
+                </li>
+
+                <li>
+                    Material should be delivered according to the specified requirement.
+                </li>
+
+                <li>
+                    Any discrepancy in item description, quantity or specification should be reported.
+                </li>
+
+                <li>
+                    The indent is subject to the applicable authorization and approval process.
+                </li>
+
+            </ol>
+
+        </div>
+
+
+        <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+        <div class="footer">
+
+
+
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>
