@@ -85,14 +85,7 @@ urlpatterns = router.urls + [
 
     # item
     path("Purchase/grn/item",PurchasePOItemsAPIView.as_view(),name='purchasePo-item-go-to-purchasegrn-item'),
-
-    path(
-    "jobwork-po/approval/<int:pk>/",
-    JobWorkPOApproval.as_view(),
-    ),
-    path(
-        "jobwork-po/pending/",
-        PendingJobWorkPOList.as_view(),
-        name="pending-jobwork-po"
-    ),
+    path("jobwork-po/approval/<int:pk>/",JobWorkPOApproval.as_view(),),
+    path("jobwork-po/pending/",PendingJobWorkPOList.as_view(),name="pending-jobwork-po"),
+    path('purchase-po/recent-approved/',RecentApprovedPurchasePOView.as_view(),name='recent_approved_purchase_po'),
 ]

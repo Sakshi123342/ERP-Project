@@ -3129,3 +3129,24 @@ class PendingJobWorkPOList(APIView):
         serializer = NewJobWorkPoInfoSerializer(pending_pos, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+from datetime import date
+from dateutil.relativedelta import relativedelta
+
+from rest_framework import generics
+from .models import PurchasePO
+from .serializers import OOPurchaseSerializer
+
+
+class RecentApprovedPurchasePOView(generics.ListAPIView):
+    serializer_class = OOPurchaseSerializer
+
+    def get_queryset(self):
+        today = date.today()
+        one_month_ago = today - relativedelta(months=1)
+
+        return PurchasePO.objects.filter(
+            Approved_Status='Approved',
+            PoDate__gte=one_month_ago,
+            PoDate__lte=today
+        ).order_by('-PoDate')
