@@ -93,39 +93,23 @@ urlpatterns = [
     path('gate/entry/delete/<int:gate_id>/',GateEntryDeleteAPI.as_view(), name='Gate-Entry-delete'),
     path("grn/edit/<int:id>/", EditGrnGenralDetailAPI.as_view(),name='PurchaseGrn-Edit'),
     path("grn/delete/<int:id>/", DeleteGrnGenralDetailAPI.as_view(), name='purchaseGrn-delete'),
-
-
     path('jobwork-challan-no/', GenerateJobworkInwardChallanNumber.as_view(),name='generate_jobwork_inward_challan_no'),
     path('jobwork-inward-challan-pdf/<int:pk>/', views.generate_jobwork_inward_challan_pdf, name='jobwork_inward_challan_pdf'),
-
     path('gate/jobwork/purchase/pdf/',views.generate_dynamic_pdf, name='jobwork-purchasepo-pdf'),
     path('gate-entry-wise-grn-data/', GateEntryGroupedAPIView.as_view(), name='all-gate-entry-data' ),
-
     path("grn/", GrnGeneralDetailAPIView.as_view(), name="grn-list"),
-
     path("gate-entrydata/inward/",GeneralDetailsInwardAPIView.as_view(),name="GateEntrydata-for-inwardchallan"),
     path("gate-entry/purchaseGrn/",GeneralDetailsPurchaseGrnAPIView.as_view(),name='GateEntry-for-purchaseGrn'),
-
     path("gate-entry/57f4/", PendingGeneralDetailsAPIView.as_view(),name="Gate-entry-57f4"),
     path("get-missing-rm/", views.get_missing_rm_items,name="rm-stockdata-whose-have-not-stock"),
-
     path("heat-summary/",HeatSummaryAPIView.as_view(), name="heat-summary"),
-
-    path(
-        "opening-stock-fg/",
-        OpeningStockFGView.as_view(),
-        name="opening-stock-fg"
-    ),
-
-    path(
-        "opening-stock-fg/<int:pk>/",
-        OpeningStockFGView.as_view(),
-        name="opening-stock-fg-detail"
-    ),
-    path(
-        "generate-opening-stock-fg-tm/",
-        GenerateOpeningStockFGTMNumber.as_view(),
-        name="generate-opening-stock-fg-tm-no"
-    ),
+    path("opening-stock-fg/",OpeningStockFGView.as_view(),name="opening-stock-fg"),
+    path("opening-stock-fg/<int:pk>/",OpeningStockFGView.as_view(),name="opening-stock-fg-detail"),
+    path("generate-opening-stock-fg-tm/",GenerateOpeningStockFGTMNumber.as_view(),name="generate-opening-stock-fg-tm-no"),
+    path('delivery-challan-preview/',views.delivery_challan_preview,name='delivery_challan_preview'),
+    # Get all + Post
+    path('delivery-challan/',views.DeliveryChallanListCreateAPIView.as_view(),name='delivery_challan_list_create'),
+    # Get single + Update
+    path('delivery-challan/<int:pk>/',views.DeliveryChallanDetailAPIView.as_view(),name='delivery_challan_detail'),
     
 ]

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Challan</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 10mm;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            color: #000;
+        }
+
+        .challan {
+            width: 75%;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #555;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .challan td,
+        .challan th {
+            border: 1px solid #555;
+            padding: 3px;
+            vertical-align: top;
+        }
+
+        .header {
+            height: 80px;
+            text-align: center;
+            vertical-align: middle !important;
+        }
+
+        .header .title {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .header .company {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .company-address {
+            font-size: 90x;
+        }
+
+        .details {
+            height: 100px;
+        }
+
+        .customer-details {
+            width: 62%;
+        }
+
+        .challan-details {
+            width: 38%;
+        }
+
+        .section-label {
+            font-weight: normal;
+        }
+
+        .gst-details {
+            margin-top: 6px;
+        }
+
+        .instruction {
+            height: 22px;
+            vertical-align: middle !important;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .items-table th,
+        .items-table td {
+            border: 1px solid #555;
+            padding: 3px;
+        }
+
+        .items-table th {
+            text-align: center;
+            font-weight: normal;
+            vertical-align: middle;
+        }
+
+        .items-table thead {
+            height: 30px;
+        }
+
+        .items-table tbody {
+            height: 450px;
+        }
+
+        .items-table tbody td {
+            height: 450px;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .description {
+            line-height: 1.5;
+            overflow-wrap: break-word;
+        }
+
+        .total-row td {
+            height: 24px;
+            vertical-align: middle;
+        }
+
+        .footer-details {
+            height: 80px;
+            line-height: 1.5;
+        }
+
+        .signature {
+            /* height: 60px; */
+            /* vertical-align: bottom !important; */
+            font-weight: bold;
+            font-size: 10px;
+        }
+
+        .signature td {
+            vertical-align: bottom;
+            padding: 8px 35px;
+            font-size: 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <table class="challan">
+        <!--Company Header-->
+        <tr>
+            <td colspan="2" class="header">
+                <div class="title">Delivery Challan</div>
+                <div class="company">SHARP ENGINEERS</div>
+                <div class="company-address">
+                    A-31 MIDC WALUJ 431136
+                </div>
+            </td>
+        </tr>
+
+        <!--Customer and Challan Details-->
+        <tr class="details">
+            <td class="customer-details">
+                <div class="section-label">To,</div>
+                <strong>M/S ABHIJAT EQUIPMENTS PVT.LTD.</strong><br>
+                19/4 MOLACHA ODHHA SATARA 431136<br>
+                <strong>GSTIN No : 27AACCA2688P1Z3</strong><br>
+                state Code : 27<br>
+                PAN No : 0
+            </td>
+            <td class="challan-details">
+                <table style="width: 100%; border-collapse: collapse; border: none;">
+                    <tr>
+                        <td style="border: none; width: 50%;">
+                            <strong>Challan No : </strong>
+                        </td>
+                        <td style="border: none;">
+                            <strong>262700022</strong>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="border: none;">Challan Date : </td>
+                        <td style="border: none;">07/10/2026</td>
+                    </tr>
+                    <tr>
+                        <td style="border: none;">Series : </td>
+                        <td style="border: none;">Returnable</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="border: none; padding-top: 1opx;">
+                            <strong>GSTIN : 27AAMFS1149Q1ZH</strong>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <!--Instruction-->
+        <tr>
+            <td colspan="2" class="instruction">
+                Please receive the following items in good condition
+                and return the duplicate duly signed by you.
+            </td>
+        </tr>
+        <!--Items Table-->
+        <tr>
+            <td colspan="2" style="padding: 0; border: none;">
+                <table class="items-table">
+                    <colgroup>
+                        <col style="width:3%;">
+                        <col style="width:9.5%;">
+                        <col style="width:45%;">
+                        <col style="width:13%;">
+                        <col style="width:12%;">
+                        <col style="width:7%;">
+                        <col style="width:10.5%;">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Sr.<br>No</th>
+                            <th>Item code</th>
+                            <th>Description</th>
+                            <th>HSN No.</th>
+                            <th>Total Qty.<br>Nos./ Kgs.</th>
+                            <th>Rate</th>
+                            <th>SubTotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td></td>
+                            <td class="description">
+                                CONC1503<br>
+                                A/42 SINGLE TOOL HOLDER<br>
+                                <br>
+                                A/42 SINGLE OPEN TOOL HOLDER REPLACEMENT
+                            </td>
+                            <td class="center">84662000</td>
+                            <td class="center">2.00 NOS</td>
+                            <td class="right">5000.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+        <!--Total amount-->
+        <tr class="total-row">
+            <td colspan="2" class="right">
+                Total Amount&nbsp; : &nbsp;5000
+            </td>
+        </tr>
+        <!--Transport Details-->
+        <tr>
+            <td colspan="2" class="footer-details">
+                Received the above artical in good condition<br><br>
+                Vehicle No : <br>
+                Transporter Name : BY COURIER<br>
+                Department : PURCHASE
+            </td>
+        </tr>
+        <!--Signature-->
+
+        <tr class="signature">
+            <td colspan="2" style="padding: 0;">
+                <table style="width: 100%; height: 58px; border-collapse: collapse;">
+                    <tr>
+                        <td style="border: none; width: 60%;"></td>
+                        <td style="border: none; width: 40%; text-align: center; height: 25px;">
+                            for&nbsp; SHARP ENGINEERS
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="border: none; width: 60%;">
+                            Receiver's Signature
+                        </td>
+                        <td style="border: none; width: 40%; text-align: center;">
+                            Delivered by
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+
+    </table>
+
+</body>
+
+</html>

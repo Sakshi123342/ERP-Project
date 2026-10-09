@@ -4885,3 +4885,24 @@ class GenerateOpeningStockFGTMNumber(APIView):
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+from django.shortcuts import render
+from rest_framework import generics
+
+from .models import DeliveryChallan
+from .serializers import DeliveryChallanSerializer
+
+def delivery_challan_preview(request):
+    return render(request,'DeliveryChallan.html')
+
+# Get all + post
+class DeliveryChallanListCreateAPIView(generics.ListCreateAPIView):
+    queryset = DeliveryChallan.objects.all()
+    serializer_class = DeliveryChallanSerializer
+
+
+# Get Single + Put/Patch Update
+class DeliveryChallanDetailAPIView(generics.RetrieveUpdateAPIView):
+    queryset = DeliveryChallan.objects.all()
+    serializer_class=DeliveryChallanSerializer
+

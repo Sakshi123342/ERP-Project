@@ -923,3 +923,58 @@ class OpeningStockFGSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+
+# Delivery Challan
+from rest_framework import serializers
+from django.db import transaction
+from .models import DeliveryChallan, DeliveryChallanItem
+
+
+class DeliveryChallanItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeliveryChallanItem
+        exclude = ['delivery_challan']
+
+
+class DeliveryChallanSerializer(serializers.ModelSerializer):
+    items = DeliveryChallanItemSerializer(many=True, required=False)
+
+    class Meta:
+        model = DeliveryChallan
+        fields = '__all__'
+
+    @transaction.atomic
+    def create(self, validated_data):
+        items_data = validated_data.pop('items', [])
+
+        challan = DeliveryChallan.objects.create(**validated_data)
+
+        for item_data in items_data:
+            DeliveryChallanItem.objects.create(
+                delivery_challan=challan,
+                **item_data
+            )
+
+        return challan
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        items_data = validated_data.pop('items', None)
+
+        # Update Delivery Challan fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+
+        # Update items only when items are included in the request
+        if items_data is not None:
+            instance.items.all().delete()
+
+            for item_data in items_data:
+                DeliveryChallanItem.objects.create(
+                    delivery_challan=instance,
+                    **item_data
+                )
+
+        return instance

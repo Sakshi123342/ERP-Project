@@ -322,19 +322,19 @@ class Material_Issue_General(models.Model):
         return f"{self.Item} - {self.ItemDescription}"
 
 # Store Module:- DeliveryChallan
-class DeliveryChallan(models.Model):
-    SelectItem = models.CharField(max_length=255, blank=True, null=True)
-    Store = models.CharField(max_length=255, blank=True, null=True)
-    ItemCode = models.CharField(max_length=255, blank=True, null=True)
-    HSNCode = models.CharField(max_length=255, blank=True, null=True)
-    Description = models.CharField(max_length=255, blank=True, null=True)
-    Purpose = models.CharField(max_length=255, blank=True, null=True)
-    Unit = models.CharField(max_length=255, blank=True, null=True)
-    Rate= models.CharField(max_length=255, blank=True, null=True)
-    Qty = models.CharField(max_length=255, blank=True, null=True)
+# class DeliveryChallan(models.Model):
+#     SelectItem = models.CharField(max_length=255, blank=True, null=True)
+#     Store = models.CharField(max_length=255, blank=True, null=True)
+#     ItemCode = models.CharField(max_length=255, blank=True, null=True)
+#     HSNCode = models.CharField(max_length=255, blank=True, null=True)
+#     Description = models.CharField(max_length=255, blank=True, null=True)
+#     Purpose = models.CharField(max_length=255, blank=True, null=True)
+#     Unit = models.CharField(max_length=255, blank=True, null=True)
+#     Rate= models.CharField(max_length=255, blank=True, null=True)
+#     Qty = models.CharField(max_length=255, blank=True, null=True)
 
-    def __str__(self):
-        return f"{self.SelectItem} - {self.SelectItem}"
+#     def __str__(self):
+#         return f"{self.SelectItem} - {self.SelectItem}"
 
 # Store Module:- SecondDeliveryChallan
 class SecondDeliveryChallan(models.Model):
@@ -729,3 +729,50 @@ class OpeningStockFG(models.Model):
     rate= models.DecimalField(max_digits=50,decimal_places=2,blank=True,null=True)
     remark_note = models.TextField(blank=True,null=True)
     
+
+# Delivery Challan 
+class DeliveryChallan(models.Model):
+    plant = models.CharField(max_length=200,blank=True,null=True)
+    dc_series = models.CharField(max_length=200,blank=True,null=True)
+    dc_type = models.CharField(max_length=200,blank=True,null=True)
+    inventory = models.CharField(max_length=200,blank=True,null=True)
+    supplier = models.CharField(max_length=500,blank=True,null=True)
+    add_code = models.CharField(max_length=200,blank=True,null=True)
+    challan_no = models.CharField(max_length=100,blank=True,null=True)
+    po_no = models.CharField(max_length=100,blank=True,null=True)
+    vehical_no = models.CharField(max_length=100,blank=True,null=True)
+    contractor = models.CharField(max_length=200,blank=True,null=True)
+    challan_date = models.DateField(blank=True,null=True)
+    transport = models.CharField(max_length=200,blank=True,null=True)
+    e_way_bill_no = models.CharField(max_length=100,blank=True,null=True)
+    ref_person_no = models.CharField(max_length=100,blank=True,null=True)
+    lr_no = models.CharField(max_length=100,blank=True,null=True)
+    po_date = models.DateField(blank=True,null=True)
+    deparment= models.CharField(max_length=200,blank=True,null=True)
+    assessable_value = models.DecimalField(max_digits=12,decimal_places=4,blank=True,null=True)
+    cgst_amt = models.DecimalField(max_digits=12,decimal_places=4,blank=True,null=True)
+    sgst_amt = models.DecimalField(max_digits=12,decimal_places=4,blank=True,null=True)
+    igst_amt = models.DecimalField(max_digits=12,decimal_places=4,blank=True,null=True)
+    grand_total = models.DecimalField(max_digits=50,decimal_places=4,blank=True,null=True)
+    remark = models.TextField(blank=True,null=True)
+    user= models.CharField(max_length=100,blank=True,null=True)
+
+    def __str__(self):
+        return self.challan_no or f"DC-{self.pk}"
+
+
+class DeliveryChallanItem(models.Model):
+    delivery_challan = models.ForeignKey(DeliveryChallan,on_delete=models.CASCADE,related_name="items")
+    item_no = models.CharField(max_length=100,blank=True,null=True)
+    item_code = models.CharField(max_length=100,blank=True,null=True)
+    item_desc = models.CharField(max_length=100,blank=True,null=True)
+    hsn_code = models.CharField(max_length=100,blank=True,null=True)
+    purpose = models.CharField(max_length=100,blank=True,null=True)
+    unit = models.CharField(max_length=100,blank=True,null=True)
+    rate = models.DecimalField(max_digits=12,decimal_places=2,blank=True,null=True)
+    qty = models.DecimalField(max_digits=12,decimal_places=2,blank=True,null=True)
+    cgst =models.DecimalField(max_digits=12,decimal_places=4,blank=True,null=True)
+    sgst =models.DecimalField(max_digits=12,decimal_places=4,blank=True,null=True)    
+    igst =models.DecimalField(max_digits=12,decimal_places=4,blank=True,null=True)
+    def __str__(self):
+        return f"{self.delivery_challan.challan_no} - {self.item}"
