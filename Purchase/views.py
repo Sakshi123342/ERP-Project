@@ -3130,6 +3130,7 @@ class PendingJobWorkPOList(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+# Po list recently approved
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
@@ -3143,7 +3144,7 @@ class RecentApprovedPurchasePOView(generics.ListAPIView):
 
     def get_queryset(self):
         today = date.today()
-        one_month_ago = today - relativedelta(months=1)
+        one_month_ago = today - relativedelta(months=20)
 
         return PurchasePO.objects.filter(
             Approved_Status='Approved',
