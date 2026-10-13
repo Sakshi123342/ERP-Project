@@ -3151,3 +3151,63 @@ class RecentApprovedPurchasePOView(generics.ListAPIView):
             PoDate__gte=one_month_ago,
             PoDate__lte=today
         ).order_by('-PoDate')
+
+# New JobWork Pending/Approval API 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import NewJobWorkPoInfo
+from .serializers import NewJobWorkPoInfoSerializer
+
+@api_view(['GET','POST'])
+def pending_jobwork_po_api(request):
+    # Get pending Po List
+    if request.method == 'GET':
+        pending_pos=NewJobWorkPoInfo.objects.filter(
+          status='Pending'
+        ).order_by('-id')
+
+        serializer = NewJobWorkPoInfoSerializer(
+            pending_pos,
+            many=True
+        )
+
+        return Response({
+            'status':True,
+            'count':len(serializer.data),
+            'data':serializer.data
+        },status=status.HTTP_200_OK)
+
+   # Post Approve or Reject PO
+
+    po_id=request.data.get('id')
+    action=request.data.get('action')
+
+    if not po_id or action not in ['Approved' ,'Rejected']:
+        return Response({
+            'status':False,
+            'message':"Provide id and action :Approved or Rejected"
+        },status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        po=NewJobWorkPoInfo.objects.get(
+            id=po_id,
+            status='Pending'
+        )
+    except NewJobWorkPoInfo.DoesNotExist:
+        return Response({
+            'status':False,
+            'message':"Pending Job Work PO not found"
+        },status=status.HTTP_404_NOT_FOUND)
+
+    po.status=action
+    po.save()
+
+    return Response({
+        'status':True,
+        'message':f"Job Work PO{action} successfully",
+        'id':po.id,
+        'po_status':po.status
+
+    },status=status.HTTP_200_OK)
+

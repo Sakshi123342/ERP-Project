@@ -88,4 +88,5 @@ urlpatterns = router.urls + [
     path("jobwork-po/approval/<int:pk>/",JobWorkPOApproval.as_view(),),
     path("jobwork-po/pending/",PendingJobWorkPOList.as_view(),name="pending-jobwork-po"),
     path('purchase-po/recent-approved/',RecentApprovedPurchasePOView.as_view(),name='recent_approved_purchase_po'),
+    path('pending-jobwork-po/',views.pending_jobwork_po_api,name='pending_jobwork_po_api'),
 ]
