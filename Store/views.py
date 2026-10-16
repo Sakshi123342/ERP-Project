@@ -155,13 +155,14 @@ def get_pending_mrns(request):
 
 
 
-# Store Module:- SubCon GRN: 57F4 Inward Challan
+# Store Module:- SubCon GRN: 57F4 Inward Challan Create
 class InwardChallanListCreate(generics.ListCreateAPIView):
     queryset = InwardChallan2.objects.all()
     serializer_class = InwardChallanSerializer
 
+# edit/delete API
 class InwardChallanRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = InwardChallan.objects.all()
+    queryset = InwardChallan2.objects.all()
     serializer_class = InwardChallanSerializer
 
 
