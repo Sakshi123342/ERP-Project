@@ -1296,8 +1296,13 @@ def generate_ItemMaster_pdf(request, pk):
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.db.models import Q
 from .models import ItemTable
+from .models import ItemMaster
+from .serializers import ItemMaster_Serializer
 
 class ItemMasterAPIView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -1307,21 +1312,21 @@ class ItemMasterAPIView(APIView):
         queryset = ItemTable.objects.all()
 
         # Search fields
-        item_search = request.GET.get("ItemSearch", "")
+        item_search = request.GET.get("item_search", "").strip()
         if item_search:
             queryset = queryset.filter(
-                Q(part_no__icontains=item_search) |
-                Q(Name_Description__icontains=item_search) |
-                Q(Part_Code__icontains=item_search)
+                Q(part_no__iexact=item_search) |
+                Q(Name_Description__iexact=item_search) |
+                Q(Part_Code__iexact=item_search)
             )
 
         # Filter by main_group
-        main_group = request.GET.get("main_group")
+        main_group = request.GET.get("main_group","").strip()
         if main_group:
             queryset = queryset.filter(main_group=main_group)
 
         # Filter by item_group
-        item_group = request.GET.get("item_group")
+        item_group = request.GET.get("item_group","").strip()
         if item_group:
             queryset = queryset.filter(item_group=item_group)
 
@@ -1346,6 +1351,8 @@ class ItemMasterAPIView(APIView):
             })
 
         return Response(data)
+
+
 
 
 from rest_framework.views import APIView
