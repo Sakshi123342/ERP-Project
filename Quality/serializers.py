@@ -58,31 +58,29 @@ class InwardtestQCinfoSerializer(serializers.ModelSerializer):
         visual_data = validated_data.pop('visual_tests', [])
         rework_data = validated_data.pop('rework_qty', [])
         reject_data = validated_data.pop('reject_qty', [])
-
-        # Create Main QC
+        grn = validated_data.get('grn')
         qc = InwardtestQCinfo.objects.create(**validated_data)
 
-        # Create Dimension Tests
+        if grn:
+            qc.item = grn.ItemNoCode
+            qc.item_des = grn.Description
+            qc.save()
+
         for dim in dimension_data:
             InwardtestDimensional.objects.create(qc=qc, **dim)
 
-        # Create Visual Tests
         for vis in visual_data:
             Inwardtestvisulainspection.objects.create(qc=qc, **vis)
 
-        # Create Rework Qty
         for rw in rework_data:
             InwardtestreworkQty.objects.create(qc=qc, **rw)
 
-        # Create Reject Qty
         for rj in reject_data:
             InwardtestrejectQty.objects.create(qc=qc, **rj)
 
         return qc
 
-
-
-
+ 
 
 # from rest_framework import serializers
 # from .models import (
@@ -92,6 +90,19 @@ class InwardtestQCinfoSerializer(serializers.ModelSerializer):
 #     SubconJobworkReworkQty,
 #     SubconJobworkRejectQty
 # )
+
+class InwardtestreworkQtySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InwardtestreworkQty
+        fields = ['id', 'description', 'qty', 'qc']   # ✅ qc include करो
+        read_only_fields = ['qc']                     # ✅ user से न लो
+
+
+class InwardtestrejectQtySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InwardtestrejectQty
+        fields = ['id', 'description', 'qty', 'qc']
+        read_only_fields = ['qc']
 
 
 class SubconJobworkDimensionalSerializer(serializers.ModelSerializer):

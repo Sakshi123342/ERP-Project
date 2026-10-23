@@ -8,6 +8,7 @@ class InwardtestQCinfo(models.Model):
     prod_no = models.CharField(max_length=300,blank=True,null=True)
     item = models.CharField(max_length=300,blank=True,null=True)
     item_des = models.CharField(max_length=300,blank=True,null=True)
+    grn = models.ForeignKey("Store.NewGrnList", on_delete=models.SET_NULL, null=True, blank=True)  
     heat_no = models.CharField(max_length=300,blank=True,null=True)
     opno = models.CharField(max_length=300,blank=True,null=True)
     sample_qty=models.CharField(max_length=300,blank=True,null=True)

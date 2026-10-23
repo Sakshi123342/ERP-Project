@@ -111,5 +111,7 @@ urlpatterns = [
     path('delivery-challan/',views.DeliveryChallanListCreateAPIView.as_view(),name='delivery_challan_list_create'),
     # Get single + Update
     path('delivery-challan/<int:pk>/',views.DeliveryChallanDetailAPIView.as_view(),name='delivery_challan_detail'),
+    # balance sheet
+    path('balance-sheet/',views.balance_sheet,name='balance_sheet'),
     
 ]

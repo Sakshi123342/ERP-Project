@@ -4907,3 +4907,515 @@ class DeliveryChallanDetailAPIView(generics.RetrieveUpdateAPIView):
     queryset = DeliveryChallan.objects.all()
     serializer_class=DeliveryChallanSerializer
 
+
+# Balance Sheet
+# from rest_framework.decorators import api_view
+# from rest_framework.response import Response
+# from rest_framework import status
+# from django.shortcuts import get_object_or_404
+# from .models import GrnGenralDetail, NewGrnList, GrnGst, GrnGstTDC
+
+
+
+
+# from collections import defaultdict
+# from django.db.models import Sum
+# from django.shortcuts import get_object_or_404
+# from rest_framework.decorators import api_view
+# from rest_framework.response import Response
+# from rest_framework import status
+# import traceback
+
+# from collections import defaultdict
+# from django.db.models import Q, Sum
+# from django.shortcuts import get_object_or_404
+# from rest_framework.decorators import api_view
+# from rest_framework.response import Response
+# from rest_framework import status
+# import traceback
+# from Quality.models import InwardtestQCinfo,InwardtestreworkQty
+
+
+# from collections import defaultdict
+# import traceback
+
+# from django.db.models import Sum, Q
+# from django.shortcuts import get_object_or_404
+
+# from rest_framework.decorators import api_view
+# from rest_framework.response import Response
+# from rest_framework import status
+
+# from .models import (
+#     GrnGenralDetail,
+#     NewGrnList,
+#     GrnGst,
+#     MaterialChallanTable,
+#     ItemTable,
+#     OnwardChallanItem,
+#     InwardChallanTable,
+# )
+
+# from Quality.models import (
+#     InwardtestreworkQty,
+#     InwardtestrejectQty,
+# )
+
+
+# @api_view(['GET'])
+# def balance_sheet(request, grn_id=None):
+#     try:
+#         search_query = request.GET.get('q', '').strip()
+
+#         # 1. Fetch GRN items and GST
+#         if grn_id:
+#             grn_detail = get_object_or_404(
+#                 GrnGenralDetail, id=grn_id
+#             )
+#             grn_items = NewGrnList.objects.filter(
+#                 New_MRN_Detail=grn_detail
+#             )
+#             grn_gst = GrnGst.objects.filter(
+#                 New_MRN_Detail=grn_detail
+#             )
+#         else:
+#             grn_items = NewGrnList.objects.all()
+#             grn_gst = GrnGst.objects.all()
+
+#         # 2. Search filter
+#         if search_query:
+#             grn_items = grn_items.filter(
+#                 Q(ItemNoCode__icontains=search_query) |
+#                 Q(Description__icontains=search_query)
+#             )
+
+#         # 3. Calculate Rework quantity item-wise
+#         rework_data = defaultdict(float)
+
+#         for rw in InwardtestreworkQty.objects.select_related('qc').all():
+#             item_code = (rw.qc.item or '').strip()
+
+#             if not item_code:
+#                 continue
+
+#             item_code=item_code.split('|')[0].strip()
+
+#             try:
+#                 qty = float(rw.qty or 0)
+#             except (ValueError, TypeError):
+#                 qty = 0
+#             rework_data[item_code] += qty
+
+#         # 4. Calculate Rejection quantity item-wise
+#         rejection_data = defaultdict(float)
+
+#         for rej in InwardtestrejectQty.objects.select_related('qc').all():
+#             item_code = (rej.qc.item or '').strip()
+
+#             if not item_code:
+#                 continue
+#             item_code=item_code.split('|')[0].strip()
+
+#             try:
+#                 qty = float(rej.qty or 0)
+#             except (ValueError, TypeError):
+#                 qty = 0
+#             rejection_data[item_code] += qty
+
+#         # 5. Group items
+#         grouped_data = defaultdict(lambda: {
+#             "sr_no": None,
+#             "item_code": "",
+#             "description": "",
+#             "size": "",
+#             "group_name": "",
+#             "unit_code": "",
+#             "item_type": "",
+#             "po_rate_qty": "",
+#             "rate": "",
+#             "qc_stock": "",
+#             "f4_stock": "",
+#             "stock": 0,
+#             "shop_floor": 0,
+#             "rework": 0,
+#             "rejection": 0,
+#             "amount": 0,
+#             "po_no": "",
+#             "date": "",
+#             "mfg_date": "",
+#             "hsn": "",
+#             "po_rate": "",
+#             "discount_rate": "",
+#             "cgst": "",
+#             "sgst": "",
+#             "igst": "",
+#             "variants": []
+#         })
+
+#         # 6. Process GRN items
+#         for index, item in enumerate(grn_items, 1):
+#             item_code = (item.ItemNoCode or '').strip()
+
+#             # GST data for this item
+#             gst_data = grn_gst.filter(
+#                 ItemCode=item.ItemNoCode
+#             ).first()
+
+#             item_master = ItemTable.objects.filter(
+#                 part_no=item.ItemNoCode
+#             ).first()
+
+#             # Amount
+#             try:
+#                 rate = float(item.Rate or 0)
+#                 qty = float(item.GrnQty or 0)
+#                 amount = rate * qty
+#             except (ValueError, TypeError):
+#                 amount = 0
+
+#             # QC stock / normal stock
+#             qc_stock_value = ""
+#             stock_value = 0
+
+#             if (
+#                 item_master
+#                 and (getattr(item_master, "QC_Application", "") or "").lower() == "yes"
+#             ):
+#                 qc_stock_value = item.GrnQty or ""
+#             else:
+#                 try:
+#                     stock_value = float(item.GrnQty or 0)
+#                 except (ValueError, TypeError):
+#                     stock_value = 0
+
+#             # Shop floor quantity
+#             if item_code:
+#                 shop_floor_value = (
+#                     MaterialChallanTable.objects.filter(
+#                         MaterialChallanDetail__Item__startswith=item_code
+#                     ).aggregate(total_qty=Sum('Qty'))['total_qty'] or 0
+#                 )
+#             else:
+#                 shop_floor_value = 0
+
+#             group = grouped_data[item_code]
+
+#             # Rework and Rejection
+#             group["rework"] = rework_data.get(item_code, 0)
+#             group["rejection"] = rejection_data.get(item_code, 0)
+
+#             # Populate item details once
+#             if not group["sr_no"]:
+#                 group.update({
+#                     "sr_no": index,
+#                     "item_code": item.ItemNoCode or '',
+#                     "description": item.Description or '',
+#                     "unit_code": item.UnitCode or '',
+#                     "po_rate_qty": item.PoQty or '',
+#                     "rate": item.Rate or '',
+#                     "qc_stock": qc_stock_value,
+#                     "f4_stock": "",
+#                     "stock": 0,
+#                     "shop_floor": shop_floor_value,
+#                     "amount": amount,
+#                     "po_no": item.PoNo or '',
+#                     "date": item.Date or '',
+#                     "mfg_date": item.MfgDate or '',
+
+#                     # GST fields
+#                     "hsn": getattr(gst_data, "HSN", "") or "",
+#                     "po_rate": getattr(gst_data, "PoRate", "") or "",
+#                     "discount_rate": getattr(gst_data, "DiscRate", "") or "",
+#                     "cgst": getattr(gst_data, "CGST", "") or "",
+#                     "sgst": getattr(gst_data, "SGST", "") or "",
+#                     "igst": getattr(gst_data, "IGST", "") or "",
+#                 })
+
+#             # Total stock
+#             group["stock"] += stock_value
+
+#             # 7. F4 Stock
+#             onward_total = 0
+#             inward_total_kg = 0
+
+#             if item_code:
+#                 onward_total = (
+#                     OnwardChallanItem.objects.filter(
+#                         item_code__icontains=item_code
+#                     ).aggregate(total_qty=Sum('qtyNo'))['total_qty'] or 0
+#                 )
+
+#                 inward_total_kg = (
+#                     InwardChallanTable.objects.filter(
+#                         ItemDescription__icontains=item_code
+#                     ).aggregate(total_in_qty_kg=Sum('InQtyKg'))['total_in_qty_kg'] or 0
+#                 )
+
+#                 try:
+#                     final_f4_stock = (
+#                         float(onward_total) - float(inward_total_kg)
+#                     )
+#                 except (ValueError, TypeError):
+#                     final_f4_stock = 0
+#             else:
+#                 final_f4_stock = group["stock"]
+
+#             group["f4_stock"] = format(final_f4_stock, '.2f')
+
+#             # Variant details
+#             group["variants"].append({
+#                 "heat_no": item.HeatNo or '',
+#                 "stock": str(stock_value),
+#                 "grn_qty": item.GrnQty or '',
+#                 "challan_qty": item.ChalQty or '',
+#                 "short_excess_qty": item.ShortExcessQty or '',
+#             })
+
+
+#         # Debugging prints
+#             print("---- Debugging Start ----")
+
+#             for rw in InwardtestreworkQty.objects.select_related('qc').all():
+#                 print("Rework Item:", rw.qc.item, "Qty:", rw.qty)
+
+#             for rej in InwardtestrejectQty.objects.select_related('qc').all():
+#                 print("Reject Item:", rej.qc.item, "Qty:", rej.qty)
+
+#             for item in grn_items:
+#                 print("GRN Item:", item.ItemNoCode, "GRN Qty:", item.GrnQty)
+
+#             print("---- Debugging End ----")
+
+#         # 8. API response
+#         response_data = list(grouped_data.values())
+
+#         return Response({
+#             "success": True,
+#             "message": "Data fetched successfully",
+#             "data": response_data,
+#             "total_records": len(response_data)
+#         }, status=status.HTTP_200_OK)
+
+#     except Exception as e:
+#         print("ERROR in balance_sheet:", e)
+#         traceback.print_exc()
+
+#         return Response({
+#             "success": False,
+#             "message": f"Error fetching data: {str(e)}",
+#             "data": []
+#         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+from collections import defaultdict
+import traceback
+
+from django.db.models import Sum, Q
+from django.shortcuts import get_object_or_404
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+
+from .models import (
+    GrnGenralDetail,
+    NewGrnList,
+    GrnGst,
+    MaterialChallanTable,
+    ItemTable,
+    OnwardChallanItem,
+    InwardChallanTable,
+)
+
+from Quality.models import (
+    InwardtestreworkQty,
+    InwardtestrejectQty,
+)
+
+
+@api_view(['GET'])
+def balance_sheet(request, grn_id=None):
+    try:
+        search_query = request.GET.get('q', '').strip()
+
+        # 1. Fetch GRN items and GST
+        if grn_id:
+            grn_detail = get_object_or_404(GrnGenralDetail, id=grn_id)
+            grn_items = NewGrnList.objects.filter(New_MRN_Detail=grn_detail)
+            grn_gst = GrnGst.objects.filter(New_MRN_Detail=grn_detail)
+        else:
+            grn_items = NewGrnList.objects.all()
+            grn_gst = GrnGst.objects.all()
+
+        # 2. Search filter
+        if search_query:
+            grn_items = grn_items.filter(
+                Q(ItemNoCode__icontains=search_query) |
+                Q(Description__icontains=search_query)
+            )
+
+        # 3. Calculate Rework quantity item-wise
+        rework_data = defaultdict(float)
+        for rw in InwardtestreworkQty.objects.select_related('qc').all():
+            if rw.qc and rw.qc.grn :
+                   item_code =(rw.qc.grn.ItemNoCode or '').strip().upper()
+                   if item_code:
+                        rework_data[item_code] += float(rw.qty or 0)
+
+
+        # 4. Calculate Rejection quantity item-wise
+        rejection_data = defaultdict(float)
+        for rej in InwardtestrejectQty.objects.select_related('qc').all():
+            if rej.qc and rej.qc.grn:
+                    item_code = (rej.qc.grn.ItemNoCode or '').strip().upper()
+                    if item_code:
+                        rejection_data[item_code] += float(rej.qty or 0)
+        # 5. Group items
+        grouped_data = defaultdict(lambda: {
+            "sr_no": None,
+            "item_code": "",
+            "description": "",
+            "size": "",
+            "group_name": "",
+            "unit_code": "",
+            "item_type": "",
+            "po_rate_qty": "",
+            "rate": "",
+            "qc_stock": "",
+            "f4_stock": "",
+            "stock": 0,
+            "shop_floor": 0,
+            "rework": 0,
+            "rejection": 0,
+            "amount": 0,
+            "po_no": "",
+            "date": "",
+            "mfg_date": "",
+            "hsn": "",
+            "po_rate": "",
+            "discount_rate": "",
+            "cgst": "",
+            "sgst": "",
+            "igst": "",
+            "variants": []
+        })
+
+        # 6. Process GRN items
+        for index, item in enumerate(grn_items, 1):
+            item_code = (item.ItemNoCode or '').strip().upper()
+            if not item_code:
+                continue   # ✅ group error avoid
+
+            # GST data for this item
+            gst_data = grn_gst.filter(ItemCode=item.ItemNoCode).first()
+            item_master = ItemTable.objects.filter(part_no=item.ItemNoCode).first()
+
+            # Amount
+            try:
+                rate = float(item.Rate or 0)
+                qty = float(item.GrnQty or 0)
+                amount = rate * qty
+            except (ValueError, TypeError):
+                amount = 0
+
+            # QC stock / normal stock
+            qc_stock_value = ""
+            stock_value = 0
+            if (
+                item_master
+                and (getattr(item_master, "QC_Application", "") or "").lower() == "yes"
+            ):
+                qc_stock_value = item.GrnQty or ""
+            else:
+                try:
+                    stock_value = float(item.GrnQty or 0)
+                except (ValueError, TypeError):
+                    stock_value = 0
+
+            # Shop floor quantity
+            shop_floor_value = (
+                MaterialChallanTable.objects.filter(
+                    MaterialChallanDetail__Item__startswith=item_code
+                ).aggregate(total_qty=Sum('Qty'))['total_qty'] or 0
+            )
+
+            group = grouped_data[item_code]
+
+            # ✅ Rework and Rejection
+            item_code = (item.ItemNoCode or '').strip().upper()
+            group["rework"] = rework_data.get(item_code, 0)
+            group["rejection"] = rejection_data.get(item_code, 0)
+
+            # Populate item details once
+            if not group["sr_no"]:
+                group.update({
+                    "sr_no": index,
+                    "item_code": item.ItemNoCode or '',
+                    "description": item.Description or '',
+                    "unit_code": item.UnitCode or '',
+                    "po_rate_qty": item.PoQty or '',
+                    "rate": item.Rate or '',
+                    "qc_stock": qc_stock_value,
+                    "f4_stock": "",
+                    "stock": 0,
+                    "shop_floor": shop_floor_value,
+                    "amount": amount,
+                    "po_no": item.PoNo or '',
+                    "date": item.Date or '',
+                    "mfg_date": item.MfgDate or '',
+
+                    # GST fields
+                    "hsn": getattr(gst_data, "HSN", "") or "",
+                    "po_rate": getattr(gst_data, "PoRate", "") or "",
+                    "discount_rate": getattr(gst_data, "DiscRate", "") or "",
+                    "cgst": getattr(gst_data, "CGST", "") or "",
+                    "sgst": getattr(gst_data, "SGST", "") or "",
+                    "igst": getattr(gst_data, "IGST", "") or "",
+                })
+
+            # Total stock
+            group["stock"] += stock_value
+
+            # 7. F4 Stock
+            onward_total = (
+                OnwardChallanItem.objects.filter(item_code__icontains=item_code)
+                .aggregate(total_qty=Sum('qtyNo'))['total_qty'] or 0
+            )
+            inward_total_kg = (
+                InwardChallanTable.objects.filter(ItemDescription__icontains=item_code)
+                .aggregate(total_in_qty_kg=Sum('InQtyKg'))['total_in_qty_kg'] or 0
+            )
+            try:
+                final_f4_stock = float(onward_total) - float(inward_total_kg)
+            except (ValueError, TypeError):
+                final_f4_stock = 0
+
+            group["f4_stock"] = format(final_f4_stock, '.2f')
+
+            # Variant details
+            group["variants"].append({
+                "heat_no": item.HeatNo or '',
+                "stock": str(stock_value),
+                "grn_qty": item.GrnQty or '',
+                "challan_qty": item.ChalQty or '',
+                "short_excess_qty": item.ShortExcessQty or '',
+            })
+
+        # 8. API response
+        response_data = list(grouped_data.values())
+
+        return Response({
+            "success": True,
+            "message": "Data fetched successfully",
+            "data": response_data,
+            "total_records": len(response_data)
+        }, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        print("ERROR in balance_sheet:", e)
+        traceback.print_exc()
+        return Response({
+            "success": False,
+            "message": f"Error fetching data: {str(e)}",
+            "data": []
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -78,8 +78,16 @@ class InwardtestQCinfoViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        qc=serializer.save()
 
+        grn_id = request.data.get("grn_id")   # मान लो तुम GRN id भेज रहे हो
+        if grn_id:
+            # from Store.models import NewGrnList
+            grn_item = NewGrnList.objects.filter(id=grn_id).first()
+            if grn_item:
+                qc.item = grn_item.ItemNoCode
+                qc.item_des = grn_item.Description
+                qc.save()
         return Response({
             "status": True,
             "message": "QC Info created successfully",
@@ -134,8 +142,41 @@ class InwardtestQCinfoViewSet(viewsets.ModelViewSet):
             "message": "QC Info deleted successfully"
         }, status=status.HTTP_204_NO_CONTENT)
     
+class InwardtestreworkQtyViewSet(viewsets.ModelViewSet):
+    queryset = InwardtestreworkQty.objects.all().order_by('-id')
+    serializer_class = InwardtestreworkQtySerializer
 
+    def create(self, request, *args, **kwargs):
+        qc_id = request.data.get("qc_id")
+        qc = InwardtestQCinfo.objects.filter(id=qc_id).first()
 
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        rework = serializer.save(qc=qc)
+
+        return Response({
+            "status": True,
+            "message": "Rework entry created successfully",
+            "data": serializer.data
+        }, status=status.HTTP_201_CREATED)
+
+class InwardtestrejectQtyViewSet(viewsets.ModelViewSet):
+    queryset = InwardtestrejectQty.objects.all().order_by('-id')
+    serializer_class = InwardtestrejectQtySerializer
+
+    def create(self, request, *args, **kwargs):
+        qc_id = request.data.get("qc_id")
+        qc = InwardtestQCinfo.objects.filter(id=qc_id).first()
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        rejection = serializer.save(qc=qc)
+
+        return Response({
+            "status": True,
+            "message": "Rejection entry created successfully",
+            "data": serializer.data
+        }, status=status.HTTP_201_CREATED)
 
 class SubconJobworkQCInfoListCreateView(APIView):
    

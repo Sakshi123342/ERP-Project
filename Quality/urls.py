@@ -4,9 +4,15 @@ from .views import *
 from rest_framework.routers import DefaultRouter
 from Store.views import InwardChallanListCreate
 from Production.views import ProductionEntryViewSet
-
+from .views import (
+    InwardtestQCinfoViewSet,
+    InwardtestreworkQtyViewSet,
+    InwardtestrejectQtyViewSet
+)
 router = DefaultRouter()
 router.register(r'qcinfo', InwardtestQCinfoViewSet, basename='qcinfo')
+router.register(r'rework', InwardtestreworkQtyViewSet, basename='rework')
+router.register(r'reject', InwardtestrejectQtyViewSet, basename='reject')
 
 urlpatterns = [
     # example
